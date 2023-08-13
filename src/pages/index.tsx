@@ -36,7 +36,7 @@ export default function Home() {
   const [expanse, setExpanse] = useState<number>();
 
   const doApiCall = async () => {
-    await fetcher("api/record", {
+    await fetcher("api/track", {
       method: "POST",
       body: JSON.stringify({
         category: selectedCategory,
