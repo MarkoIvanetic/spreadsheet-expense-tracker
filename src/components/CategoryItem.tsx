@@ -18,7 +18,7 @@ export const CategoryItem: FC<CategoryItemProps> = ({
   ...rest
 }) => {
   if (category === undefined) {
-    return <SkeletonCircle w="140px" h="140px" />;
+    return <SkeletonCircle w="120px" h="120px" />;
   }
 
   const [name, color] = category;
@@ -27,7 +27,7 @@ export const CategoryItem: FC<CategoryItemProps> = ({
     // @ts-ignore
     <Circle
       as={Button}
-      size="140px"
+      size="120px"
       bg={color}
       border={isSelected ? "4px solid blue" : "4px solid transparent"}
       _hover={{

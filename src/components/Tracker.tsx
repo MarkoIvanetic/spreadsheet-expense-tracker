@@ -1,10 +1,13 @@
 import {
   Button,
   Flex,
+  FormHelperText,
   Input,
   InputGroup,
+  InputLeftElement,
   InputRightElement,
   StackProps,
+  Text,
   VStack,
 } from "@chakra-ui/react";
 
@@ -26,58 +29,97 @@ export const Tracker: FC<ITrackerProps> = ({ onSave, data, ...rest }) => {
 
   const [expense, setExpense] = useState<number>();
 
-  return (
-    <VStack alignItems="flex-start" {...rest}>
-      <Flex
-        flexDir="column"
-        w="min(100%, 400px)"
-        justifyContent="flex-start"
-        bg={selectedCategory ? "blue.200" : "red.200"}
-      >
-        <InputGroup size="md" w="100%">
-          <Input
-            w="100%"
-            // @ts-ignore
-            ref={inputRef}
-            value={expense}
-            isDisabled={!selectedCategory}
-            p="10px 4.5rem 10px 20px"
-            type="number"
-            placeholder="Enter expense"
-            onChange={(e) => setExpense(+e.target.value)}
-          />
-          <InputRightElement width="4.5rem">
-            <Button
-              h="1.75rem"
-              size="sm"
-              onClick={() => {
-                if (!selectedCategory || !expense) return;
+  const borderColor = selectedCategory ? "blue.200" : "red.200";
 
-                onSave(selectedCategory, description || "", expense);
-              }}
-            >
-              Save
-            </Button>
-          </InputRightElement>
-        </InputGroup>
-        <InputGroup size="md" w="100%">
-          <Input
+  return (
+    <VStack
+      alignItems="center"
+      justifyContent="center"
+      p={3}
+      minW="400px"
+      {...rest}
+    >
+      <Flex mb={5} gap={3} flexDir="row" w="min(100%, 800px)">
+        <VStack
+          flexDir="column"
+          w="100%"
+          justifyContent="flex-start"
+          spacing={4}
+        >
+          <InputGroup
+            borderRadius="10px"
+            borderWidth="2px"
+            borderColor={borderColor}
+            size="md"
             w="100%"
-            value={description}
-            isDisabled={!selectedCategory}
-            p="10px 4.5rem 10px 20px"
-            type="text"
-            placeholder="Enter description"
-            onChange={(e) => setDescription(e.target.value)}
-          />
-        </InputGroup>
+          >
+            <InputLeftElement
+              pointerEvents="none"
+              color="gray.300"
+              fontSize="1.2em"
+              children="$"
+            />
+            <Input
+              w="100%"
+              _focusVisible={{
+                borderColor: borderColor,
+              }}
+              // @ts-ignore
+              ref={inputRef}
+              value={expense}
+              p="10px 4.5rem 10px 40px"
+              type="number"
+              placeholder="Enter expense"
+              onChange={(e) => setExpense(+e.target.value)}
+            />
+          </InputGroup>
+          <InputGroup
+            borderRadius="10px"
+            borderWidth="2px"
+            borderColor={borderColor}
+            size="md"
+            w="100%"
+          >
+            <InputLeftElement
+              pointerEvents="none"
+              fontSize="1.2em"
+              children="🤷‍♂️"
+            />
+            <Input
+              w="100%"
+              _focusVisible={{
+                borderColor: borderColor,
+              }}
+              value={description}
+              p="10px 4.5rem 10px 40px"
+              type="text"
+              placeholder="Enter description"
+              onChange={(e) => setDescription(e.target.value)}
+            />
+          </InputGroup>
+        </VStack>
+        <Button
+          w="200px"
+          height="auto"
+          colorScheme="blue"
+          isDisabled={!selectedCategory || !expense}
+          onClick={() => {
+            if (!selectedCategory || !expense) return;
+
+            onSave(selectedCategory, description || "", expense);
+          }}
+        >
+          Add record
+        </Button>
       </Flex>
       <Flex
         alignItems="center"
+        justifyContent="center"
         textAlign="center"
         color="white"
         flexWrap="wrap"
-        gap="20px"
+        gap="15px"
+        w="min(100%, 800px)"
       >
         {data.map((item: Array<string>, i: number) => {
           return (
