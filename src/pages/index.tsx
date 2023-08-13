@@ -4,6 +4,7 @@ import { generateArray } from "@/utils/misc";
 import Head from "next/head";
 import { useState } from "react";
 import { Tracker } from "@/components/Tracker";
+import { Button, Flex, useColorMode } from "@chakra-ui/react";
 
 const fetcher = async (url: string, options: Record<any, any>) => {
   const res = await fetch(url, options);
@@ -15,12 +16,14 @@ const fetcher = async (url: string, options: Record<any, any>) => {
   return data;
 };
 
-const mockArray = generateArray(20);
+const mockArray = generateArray(18);
 
 export default function Home() {
   const { data = mockArray } = useSWRImmutable("api/data", fetcher);
 
   const [reset, setReset] = useState(0);
+
+  const { colorMode, toggleColorMode } = useColorMode();
 
   const saveExpense = async (
     category: string,
@@ -48,6 +51,11 @@ export default function Home() {
       </Head>
       <main>
         <Tracker key={reset} data={data} onSave={saveExpense} />
+        <Flex as="footer" mt={5} px="10px" py={4}>
+          <Button onClick={toggleColorMode} size="sm">
+            Toggle Color Mode
+          </Button>
+        </Flex>
       </main>
     </>
   );

@@ -35,7 +35,7 @@ export const Tracker: FC<ITrackerProps> = ({ onSave, data, ...rest }) => {
     <VStack
       alignItems="center"
       justifyContent="center"
-      p={3}
+      py={3}
       minW="400px"
       {...rest}
     >
@@ -118,7 +118,7 @@ export const Tracker: FC<ITrackerProps> = ({ onSave, data, ...rest }) => {
         textAlign="center"
         color="white"
         flexWrap="wrap"
-        gap="15px"
+        gap="10px"
         w="min(100%, 800px)"
       >
         {data.map((item: Array<string>, i: number) => {
