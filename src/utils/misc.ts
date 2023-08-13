@@ -1,0 +1,3 @@
+export const generateArray = (n: number) => {
+  return Array.from(Array(n));
+};
