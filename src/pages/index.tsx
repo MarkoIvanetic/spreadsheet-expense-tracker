@@ -68,6 +68,7 @@ export default function Home() {
             <InputGroup size="md" w="100%">
               <Input
                 w="100%"
+                // @ts-ignore
                 ref={inputRef}
                 value={expanse}
                 p="10px 4.5rem 10px 20px"
