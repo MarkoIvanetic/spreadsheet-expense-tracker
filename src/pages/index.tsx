@@ -1,17 +1,9 @@
-import {
-  Button,
-  Flex,
-  HStack,
-  Input,
-  InputGroup,
-  InputRightElement,
-  VStack,
-} from "@chakra-ui/react";
-import useSWR from "swr";
-import { useState, useRef } from "react";
-import Head from "next/head";
+import useSWRImmutable from "swr/immutable";
+
 import { generateArray } from "@/utils/misc";
-import { CategoryItem } from "@/components/CategoryItem";
+import Head from "next/head";
+import { useState } from "react";
+import { Tracker } from "@/components/Tracker";
 
 const fetcher = async (url: string, options: Record<any, any>) => {
   const res = await fetch(url, options);
@@ -26,27 +18,24 @@ const fetcher = async (url: string, options: Record<any, any>) => {
 const mockArray = generateArray(20);
 
 export default function Home() {
-  const { data = mockArray } = useSWR("api/data", fetcher);
+  const { data = mockArray } = useSWRImmutable("api/data", fetcher);
 
-  const inputRef = useRef<HTMLInputElement | undefined>();
+  const [reset, setReset] = useState(0);
 
-  const [selectedCategory, setSelectedCategory] = useState<string | undefined>("");
-  const [description, setDescription] = useState<string | undefined>("");
-
-  const [expanse, setExpanse] = useState<number>();
-
-  const doApiCall = async () => {
+  const saveExpense = async (
+    category: string,
+    description: string,
+    expense: number
+  ) => {
     await fetcher("api/track", {
       method: "POST",
       body: JSON.stringify({
-        category: selectedCategory,
+        category: category,
         description: description || "",
-        value: expanse,
+        value: expense,
       }),
     });
-    setSelectedCategory(undefined);
-    setExpanse(undefined);
-    setDescription('');
+    setReset((x) => x + 1);
   };
 
   return (
@@ -58,67 +47,7 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main>
-        <VStack alignItems="flex-start">
-          <Flex
-          flexDir="column"
-            w="min(100%, 400px)"
-            justifyContent="flex-start"
-            bg={selectedCategory ? "blue.200" : "red.200"}
-          >
-            <InputGroup size="md" w="100%">
-              <Input
-                w="100%"
-                // @ts-ignore
-                ref={inputRef}
-                value={expanse}
-                p="10px 4.5rem 10px 20px"
-                type="number"
-                placeholder="Enter expanse"
-                onChange={(e) =>
-                  selectedCategory && setExpanse(+e.target.value)
-                }
-              />
-              <InputRightElement width="4.5rem">
-                <Button h="1.75rem" size="sm" onClick={doApiCall}>
-                  Save
-                </Button>
-              </InputRightElement>
-            </InputGroup>
-            <InputGroup size="md" w="100%">
-              <Input
-                w="100%"
-                value={description}
-                p="10px 4.5rem 10px 20px"
-                type="text"
-                placeholder="Enter description"
-                onChange={(e) =>
-                  selectedCategory && setDescription(e.target.value)
-                }
-              />
-            </InputGroup>
-          </Flex>
-          <Flex
-            alignItems="center"
-            textAlign="center"
-            color="white"
-            flexWrap="wrap"
-            gap="20px"
-          >
-            {data.map((item: Array<string>, i: number) => {
-              return (
-                <CategoryItem
-                  onClick={() => {
-                    setSelectedCategory(item[0]);
-                    inputRef.current?.focus?.();
-                  }}
-                  isSelected={selectedCategory === item?.[0]}
-                  key={i}
-                  category={item}
-                />
-              );
-            })}
-          </Flex>
-        </VStack>
+        <Tracker key={reset} data={data} onSave={saveExpense} />
       </main>
     </>
   );
