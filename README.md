@@ -29,8 +29,7 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 
 #### Organising your spreadsheet
 
-1. Your google sheet should have a sheet called "Data" where all your expense categories are listed in column A. Make this your first sheet.
-   Like this:
+1. Your google sheet should have a sheet called "Data" where all your expense categories are listed in column A. You can add background color of category in column B. Make this your first sheet.
    <img width="298" height="450px" alt="image" src="https://github.com/MarkoIvanetic/spreadsheet-expense-tracker/assets/9166755/6c184a2b-4eeb-4a5c-aa57-45f460cd399b">
 
 2. You will need to manually add sheets for every (new) months. App will record the expenses into the last sheet. By default, the app will enter the expanse into range `A:C` with category/value/description data.
