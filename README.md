@@ -1,8 +1,19 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+## Spreadsheet expense tracker
+
+This app uses google spreadsheet as a database for tracking expanses.
+See the full backend setup here: [How to Use Google Sheets As a Database For Your Business](https://blog.coupler.io/how-to-use-google-sheets-as-database/#Use_Google_Sheets_as_a_database_for_a_website)
 
 ## Getting Started
 
-First, run the development server:
+### Install dependencies:
+
+```bash
+npm install
+# or
+yarn install
+```
+
+Run the development server:
 
 ```bash
 npm run dev
@@ -14,25 +25,37 @@ pnpm dev
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+### Setup spreadsheet
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+#### Organising your spreadsheet
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+1. Your google sheet should have a sheet called "Data" where all your expense categories are listed in column A. Make this your first sheet.
+   Like this:
+   <img width="298" height="450px" alt="image" src="https://github.com/MarkoIvanetic/spreadsheet-expense-tracker/assets/9166755/6c184a2b-4eeb-4a5c-aa57-45f460cd399b">
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+2. You will need to manually add sheets for every (new) months. App will record the expenses into the last sheet. By default, the app will enter the expanse into range `A:C` with category/value/description data.
 
-## Learn More
+You can change this behaviour by altering `sheetRange` variable in `src/pages/api/track.ts`.
 
-To learn more about Next.js, take a look at the following resources:
+#### Authentication
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Follow the steps described in [How to Use Google Sheets As a Database For Your Business#Auth](https://blog.coupler.io/how-to-use-google-sheets-as-database/#Use_Google_Sheets_as_a_database_for_a_website:~:text=and%20write%20data.-,Authenticating%20with%20Google%20Sheets%20API,-In%20order%20to)
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+- Google API service should create a **service account email**. Share the spreadsheet with this email!
+- following the step further you will create Service Key. The dashboard will download `client_secret.json`
+- only thing you need from here is `client_email` and `private_key`
 
-## Deploy on Vercel
+  Make an `.env` file in the project root:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```
+CLIENT_EMAIL=*************@test-api-project-**************************.com
+PRIVATE_KEY="-----BEGIN PRIVATE KEY-----\nMII...Ggg=\n-----END PRIVATE KEY-----\n"
+SPREADSHEET_ID="1m4qUwDiD*****************b9SWogQ0_QWyVssyw0"
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+You can easily get spreadsheet Id from the Google sheets URL:
+<img width="891" alt="image" src="https://github.com/MarkoIvanetic/spreadsheet-expense-tracker/assets/9166755/f6680405-4897-4a74-ad5a-9a2cfca8a904">
+
+#### Hosting
+
+TBA
