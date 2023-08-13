@@ -30,7 +30,9 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 #### Organising your spreadsheet
 
 1. Your google sheet should have a sheet called "Data" where all your expense categories are listed in column A. You can add background color of category in column B. Make this your first sheet.
-   <img width="298" height="450px" alt="image" src="https://github.com/MarkoIvanetic/spreadsheet-expense-tracker/assets/9166755/6c184a2b-4eeb-4a5c-aa57-45f460cd399b">
+
+<img width="306" alt="image" src="https://github.com/MarkoIvanetic/spreadsheet-expense-tracker/assets/9166755/42cb4381-c0e0-43a5-aeb9-49b5cd4d6599">
+
 
 2. You will need to manually add sheets for every (new) months. App will record the expenses into the last sheet. By default, the app will enter the expanse into range `A:C` with category/value/description data.
 
@@ -53,8 +55,9 @@ SPREADSHEET_ID="1m4qUwDiD*****************b9SWogQ0_QWyVssyw0"
 ```
 
 You can easily get spreadsheet Id from the Google sheets URL:
-<img width="891" alt="image" src="https://github.com/MarkoIvanetic/spreadsheet-expense-tracker/assets/9166755/f6680405-4897-4a74-ad5a-9a2cfca8a904">
+
+<img width="943" alt="image" src="https://github.com/MarkoIvanetic/spreadsheet-expense-tracker/assets/9166755/4f3bec15-228b-47fe-bb78-dba124d7467b">
 
 #### Hosting
 
-TBA
+TBA, but I'm using [Netlify](https://www.netlify.com/?attr=homepage-modal) - it's free.
