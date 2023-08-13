@@ -4,7 +4,7 @@ import { generateArray } from "@/utils/misc";
 import Head from "next/head";
 import { useState } from "react";
 import { Tracker } from "@/components/Tracker";
-import { Button, Flex, useColorMode } from "@chakra-ui/react";
+import { Box, Button, Flex, useColorMode } from "@chakra-ui/react";
 
 const fetcher = async (url: string, options: Record<any, any>) => {
   const res = await fetch(url, options);
@@ -51,10 +51,12 @@ export default function Home() {
       </Head>
       <main>
         <Tracker key={reset} data={data} onSave={saveExpense} />
-        <Flex as="footer" mt={5} px="10px" py={4}>
-          <Button onClick={toggleColorMode} size="sm">
-            Toggle Color Mode
-          </Button>
+        <Flex as="footer" mt="10vh" px="10px" py={4} justifyContent="center">
+          <Box w="min(100%, 800px)">
+            <Button onClick={toggleColorMode} size="sm">
+              Toggle Color Mode
+            </Button>
+          </Box>
         </Flex>
       </main>
     </>
