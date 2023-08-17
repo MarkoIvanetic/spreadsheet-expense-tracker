@@ -1,15 +1,13 @@
 import {
   Button,
   Flex,
-  FormHelperText,
   Input,
   InputGroup,
   InputLeftElement,
-  InputRightElement,
   StackProps,
-  Text,
-  VStack,
+  VStack
 } from "@chakra-ui/react";
+
 
 import { CategoryItem } from "@/components/CategoryItem";
 import { FC, useRef, useState } from "react";
@@ -20,6 +18,7 @@ interface ITrackerProps extends StackProps {
 }
 
 export const Tracker: FC<ITrackerProps> = ({ onSave, data, ...rest }) => {
+
   const inputRef = useRef<HTMLInputElement | undefined>();
 
   const [selectedCategory, setSelectedCategory] = useState<string | undefined>(

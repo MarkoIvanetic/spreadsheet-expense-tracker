@@ -74,3 +74,25 @@ export async function getCategoryData(
 
   return getData.values;
 }
+
+export const getSheetData = async () => {
+  let jwtClient = await getJwtClient();
+
+  let spreadsheetId = process.env.SPREADSHEET_ID || "";
+
+  let sheets = google.sheets("v4");
+
+  const data = await getCategoryData(spreadsheetId, jwtClient, sheets);
+
+  return data;
+};
+
+export const fetcher = async (url: string, options?: Record<any, any>) => {
+  const res = await fetch(url, options);
+  const data = await res.json();
+
+  if (res.status !== 200) {
+    throw new Error(data.message);
+  }
+  return data;
+};
