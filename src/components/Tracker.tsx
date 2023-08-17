@@ -5,12 +5,12 @@ import {
   InputGroup,
   InputLeftElement,
   StackProps,
-  VStack
+  VStack,
 } from "@chakra-ui/react";
-
 
 import { CategoryItem } from "@/components/CategoryItem";
 import { FC, useRef, useState } from "react";
+import { getFirstEmoji } from "@/utils/misc";
 
 interface ITrackerProps extends StackProps {
   data: Array<Array<string>>;
@@ -18,7 +18,6 @@ interface ITrackerProps extends StackProps {
 }
 
 export const Tracker: FC<ITrackerProps> = ({ onSave, data, ...rest }) => {
-
   const inputRef = useRef<HTMLInputElement | undefined>();
 
   const [selectedCategory, setSelectedCategory] = useState<string | undefined>(
@@ -79,11 +78,9 @@ export const Tracker: FC<ITrackerProps> = ({ onSave, data, ...rest }) => {
             size="md"
             w="100%"
           >
-            <InputLeftElement
-              pointerEvents="none"
-              fontSize="1.2em"
-              children="🤷‍♂️"
-            />
+            <InputLeftElement pointerEvents="none" fontSize="1.2em">
+              {getFirstEmoji(selectedCategory) || "🤷‍♂️"}
+            </InputLeftElement>
             <Input
               w="100%"
               _focusVisible={{
@@ -121,6 +118,8 @@ export const Tracker: FC<ITrackerProps> = ({ onSave, data, ...rest }) => {
         w="min(100%, 800px)"
       >
         {data.map((item: Array<string>, i: number) => {
+          const [category, color] = item;
+
           return (
             <CategoryItem
               onClick={() => {
@@ -131,7 +130,8 @@ export const Tracker: FC<ITrackerProps> = ({ onSave, data, ...rest }) => {
               }}
               isSelected={selectedCategory === item?.[0]}
               key={i}
-              category={item}
+              category={category}
+              color={color}
             />
           );
         })}

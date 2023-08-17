@@ -8,20 +8,21 @@ import {
 import { FC } from "react";
 
 interface CategoryItemProps extends ButtonProps {
-  category: Array<string>;
+  category: string;
   isSelected?: boolean;
+  color?: string;
 }
 
 export const CategoryItem: FC<CategoryItemProps> = ({
   category,
+  color,
   isSelected,
   ...rest
 }) => {
+
   if (category === undefined) {
     return <SkeletonCircle w="120px" h="120px" />;
   }
-
-  const [name, color] = category;
 
   return (
     // @ts-ignore
@@ -36,7 +37,7 @@ export const CategoryItem: FC<CategoryItemProps> = ({
       }}
       {...rest}
     >
-      <Text whiteSpace="break-spaces" color="white"> {name}</Text>
+      <Text whiteSpace="break-spaces" color="white"> {category}</Text>
     </Circle>
   );
 };
