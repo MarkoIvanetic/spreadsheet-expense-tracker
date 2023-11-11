@@ -1,4 +1,5 @@
 import {
+  Box,
   Button,
   Flex,
   Input,
@@ -9,8 +10,9 @@ import {
 } from "@chakra-ui/react";
 
 import { CategoryItem } from "@/components/CategoryItem";
-import { FC, useRef, useState } from "react";
 import { getFirstEmoji } from "@/utils/misc";
+import { FC, useRef, useState } from "react";
+import { TrackerMenu } from "./TrackerMenu";
 
 interface ITrackerProps extends StackProps {
   data: Array<Array<string>>;
@@ -19,6 +21,26 @@ interface ITrackerProps extends StackProps {
 
 export const Tracker: FC<ITrackerProps> = ({ onSave, data, ...rest }) => {
   const inputRef = useRef<HTMLInputElement | undefined>();
+
+  let localData = (() => {
+    if (data) {
+      return data;
+    }
+
+    try {
+      const local = JSON.parse(window?.localStorage?.getItem("api/data") || "");
+
+      if (Array.isArray(local)) {
+        return local;
+      }
+
+      return [];
+    } catch (error) {
+
+      return [];
+
+    }
+  })();
 
   const [selectedCategory, setSelectedCategory] = useState<string | undefined>(
     ""
@@ -107,6 +129,9 @@ export const Tracker: FC<ITrackerProps> = ({ onSave, data, ...rest }) => {
         >
           Add record
         </Button>
+        <Box w="24px">
+          <TrackerMenu />
+        </Box>
       </Flex>
       <Flex
         alignItems="center"
@@ -117,7 +142,7 @@ export const Tracker: FC<ITrackerProps> = ({ onSave, data, ...rest }) => {
         gap="10px"
         w="min(100%, 800px)"
       >
-        {data.map((item: Array<string>, i: number) => {
+        {localData?.map((item: Array<string>, i: number) => {
           const [category, color] = item;
 
           return (
