@@ -13,6 +13,7 @@ export default async function handler(
 ) {
   if (req.method === "POST") {
     const { category, value, description } = JSON.parse(req.body);
+    const date = new Date().toDateString();
 
     const jwtClient = await getJwtClient();
     const spreadsheetId = process.env.SPREADSHEET_ID || "";
@@ -31,14 +32,14 @@ export default async function handler(
       `${lastSheetName}!A:A`
     );
 
-    const sheetRange = `${lastSheetName}!A${firstEmptyRowIndex}:C${firstEmptyRowIndex}`;
+    const sheetRange = `${lastSheetName}!A${firstEmptyRowIndex}:D${firstEmptyRowIndex}`;
 
     const { data } = await sheets.spreadsheets.values.update({
       auth: jwtClient,
       spreadsheetId: spreadsheetId,
       valueInputOption: "USER_ENTERED",
       range: sheetRange,
-      requestBody: { values: [[category, value, description]] },
+      requestBody: { values: [[category, value, description, date]] },
     });
 
     return res.send({ status: 200, message: data });
