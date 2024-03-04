@@ -1,3 +1,5 @@
+import { useLocalStorage } from "@/hooks/useLocalStorage";
+import { useStats } from "@/hooks/useStats";
 import { MenuIcon } from "@/icons/MenuIcon";
 import {
   Button,
@@ -8,18 +10,36 @@ import {
   MenuList,
   useColorMode,
 } from "@chakra-ui/react";
-import { useSWRConfig } from "swr";
+import { Category } from "./CategoryItem";
+
+// create an enum value called TrackerViewState containing values for grid view mode: Grid or List
+export enum TrackerViewState {
+  Grid = 1,
+  List = 2,
+}
 
 export const TrackerMenu = () => {
-  const { colorMode, toggleColorMode } = useColorMode();
-  const { mutate } = useSWRConfig();
+  const { toggleColorMode } = useColorMode();
+  const [_stats, setStats] = useStats();
+  const [viewMode, setViewMode] = useLocalStorage("et-view", 1);
+
+  const [_data, setData] = useLocalStorage<Array<Category>>("api/data", []);
 
   const refreshData = async () => {
-    const newData = await fetch("api/data").then((response) => response.json());
+    setData([]);
+    setStats({});
 
-    localStorage.setItem("api/data", JSON.stringify(newData));
+    setTimeout(() => {
+      window.location.reload();
+    }, 100);
+  };
 
-    mutate("api/data", newData);
+  const toggleGrid = async () => {
+    setViewMode(
+      viewMode === TrackerViewState.Grid
+        ? TrackerViewState.List
+        : TrackerViewState.Grid
+    );
   };
 
   return (
@@ -40,8 +60,16 @@ export const TrackerMenu = () => {
         >
           Toggle Color Mode
         </MenuItem>
-        <MenuItem justifyContent="flex-start" as={Button} onClick={refreshData}>
-          Refresh data
+        <MenuItem justifyContent="flex-start" as={Button} onClick={toggleGrid}>
+          Switch to {viewMode === TrackerViewState.Grid ? "List" : "Grid"} view
+        </MenuItem>
+        <MenuItem
+          justifyContent="flex-start"
+          as={Button}
+          colorScheme="red"
+          onClick={refreshData}
+        >
+          Reset data
         </MenuItem>
       </MenuList>
     </Menu>

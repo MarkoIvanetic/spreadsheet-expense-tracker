@@ -67,7 +67,7 @@ export async function getCategoryData(
   const { data: getData } = await sheets.spreadsheets.values.get({
     auth: jwtClient,
     spreadsheetId,
-    range: "Data!A:B",
+    range: "Data!A:C",
   });
 
   if (!getData.values) return null;

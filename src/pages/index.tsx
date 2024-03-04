@@ -5,8 +5,9 @@ import Head from "next/head";
 import { useState } from "react";
 import { SWRConfig } from "swr";
 
+import { Category } from "@/components/CategoryItem";
+import { useStats } from "@/hooks/useStats";
 import NoSSR from "@/utils/NoSSR";
-import useSWRImmutable from "swr/immutable";
 
 const fetcher = async (url: string, options: Record<any, any>) => {
   const res = await fetch(url, options);
@@ -21,22 +22,24 @@ const fetcher = async (url: string, options: Record<any, any>) => {
 const Home: NextPage<{ fallback: Record<string, any> }> = ({ fallback }) => {
   const [reset, setReset] = useState(0);
 
-  const { data } = useSWRImmutable("api/data", async () => {
-    return await fetch("api/data").then((response) => response.json());
-  });
+  const [stats, setStats] = useStats();
 
   const saveExpense = async (
-    category: string,
+    category: Category,
     description: string,
     expense: number
   ) => {
     await fetcher("api/track", {
       method: "POST",
       body: JSON.stringify({
-        category: category,
+        category: category.name,
         description: description || "",
         value: expense,
       }),
+    });
+    setStats({
+      ...stats,
+      [category.id]: (stats[category.id] || 0) + 1,
     });
     setReset((x) => x + 1);
   };
@@ -51,7 +54,7 @@ const Home: NextPage<{ fallback: Record<string, any> }> = ({ fallback }) => {
       </Head>
       <main>
         <NoSSR>
-          <Tracker data={data} key={reset} onSave={saveExpense} />
+          <Tracker key={reset} onSave={saveExpense} />
         </NoSSR>
         <Flex as="footer" mt="10vh" px="10px" py={4} justifyContent="center">
           <Box w="min(100%, 800px)"></Box>

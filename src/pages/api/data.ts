@@ -15,9 +15,18 @@ export default async function handler(
 
     let sheets = google.sheets("v4");
 
-    const data = await getCategoryData(spreadsheetId, jwtClient, sheets);
+    const data =
+      (await getCategoryData(spreadsheetId, jwtClient, sheets)) || [];
 
-    return res.status(200).json(data);
+    const formattedData = data.map((item) => {
+      return {
+        name: item[0],
+        color: item[1],
+        id: item[2],
+      };
+    });
+
+    return res.status(200).json(formattedData);
   } else {
     return res.send({ status: 500, message: "Unhadled method!" });
   }

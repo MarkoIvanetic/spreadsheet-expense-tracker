@@ -7,8 +7,14 @@ import {
 } from "@chakra-ui/react";
 import { FC } from "react";
 
+export interface Category {
+  id: string;
+  name: string;
+  color: string;
+}
+
 interface CategoryItemProps extends ButtonProps {
-  category: string;
+  category: Category;
   isSelected?: boolean;
   color?: string;
 }
@@ -19,25 +25,27 @@ export const CategoryItem: FC<CategoryItemProps> = ({
   isSelected,
   ...rest
 }) => {
-
   if (category === undefined) {
-    return <SkeletonCircle w="120px" h="120px" />;
+    // @ts-ignore
+    return <SkeletonCircle {...rest} />;
   }
 
   return (
     // @ts-ignore
     <Circle
       as={Button}
-      size="120px"
       bg={color}
-      border={isSelected ? "4px solid blue" : "4px solid transparent"}
+      border={isSelected ? "2px solid gold" : "2px solid transparent"}
       _hover={{
         bg: color,
-        border: '4px solid blue'
+        border: "2px solid white",
       }}
       {...rest}
     >
-      <Text whiteSpace="break-spaces" color="white"> {category}</Text>
+      <Text whiteSpace="break-spaces" fontSize={12} color="white">
+        {" "}
+        {category.name}
+      </Text>
     </Circle>
   );
 };
