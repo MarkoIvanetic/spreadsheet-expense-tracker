@@ -12,8 +12,7 @@ export default async function handler(
   res: NextApiResponse
 ) {
   if (req.method === "POST") {
-    const { category, value, description } = JSON.parse(req.body);
-    const date = new Date().toDateString();
+    const { category, value, description, date } = JSON.parse(req.body);
 
     const jwtClient = await getJwtClient();
     const spreadsheetId = process.env.SPREADSHEET_ID || "";
