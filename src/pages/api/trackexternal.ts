@@ -1,10 +1,8 @@
-import { NextApiRequest, NextApiResponse } from "next";
+// src/pages/api/trackexternal.ts
 
-import {
-  findFirstEmptyCellInColumn,
-  getJwtClient,
-  getLastSheetName,
-} from "@/utils/api";
+import { NextApiRequest, NextApiResponse } from "next";
+import { getJwtClient, updateSheet } from "@/utils/api";
+import { recognizeCategory } from "@/utils/chatGPT";
 import { google } from "googleapis";
 
 interface NotificationData {
@@ -12,10 +10,10 @@ interface NotificationData {
   vendor: string;
 }
 
-function extractPriceAndVendor(notificationText: string) {
-  // Regex to match the price (supports both integer and decimal)
+function extractPriceAndVendor(
+  notificationText: string
+): NotificationData | undefined {
   const priceRegex = /(\d+(\.\d{1,2})?)/;
-  // Regex to match the vendor (assuming it's the word after "at")
   const vendorRegex = /at\s+(\w+)/;
 
   const priceMatch = notificationText.match(priceRegex);
@@ -28,7 +26,7 @@ function extractPriceAndVendor(notificationText: string) {
     };
   }
 
-  return undefined; // Return null if the pattern does not match
+  return undefined;
 }
 
 export default async function handler(
@@ -40,58 +38,29 @@ export default async function handler(
 
     const variables = extractPriceAndVendor(text);
 
-    let price;
-    let vendor;
-
-    if (variables) {
-      price = variables.price;
-      vendor = variables.vendor;
-    } else {
-      return res.send({
+    if (!variables) {
+      return res.status(500).send({
         status: 500,
         message: "Could not extract price and vendor from the text.",
-        recieved: req.body,
+        received: req.body,
       });
     }
 
-    // category: category.name,
-    // description: description || "",
-    // date: new Date().toDateString(),
-    // value: expense,
+    const { price, vendor } = variables;
+
+    // Get category from ChatGPT
+    const category = await recognizeCategory(text);
 
     const jwtClient = await getJwtClient();
     const spreadsheetId = process.env.SPREADSHEET_ID || "";
     const sheets = google.sheets("v4");
 
-    const lastSheetName = await getLastSheetName(
-      spreadsheetId,
-      jwtClient,
-      sheets
-    );
-
-    const firstEmptyRowIndex = await findFirstEmptyCellInColumn(
-      spreadsheetId,
-      jwtClient,
-      sheets,
-      `${lastSheetName}!A:A`
-    );
-
-    const sheetRange = `${lastSheetName}!A${firstEmptyRowIndex}:D${firstEmptyRowIndex}`;
-
-    const { data } = await sheets.spreadsheets.values.update({
-      auth: jwtClient,
-      spreadsheetId: spreadsheetId,
-      valueInputOption: "USER_ENTERED",
-      range: sheetRange,
-      requestBody: {
-        values: [
-          ["❓No idea", price, `Auto: ${vendor}`, new Date().toDateString()],
-        ],
-      },
-    });
+    const data = await updateSheet(spreadsheetId, jwtClient, sheets, [
+      [category, price, `Auto: ${vendor}`, new Date().toDateString()],
+    ]);
 
     return res.send({ status: 200, message: data });
   } else {
-    return res.send({ status: 500, message: "Unhadled method!" });
+    return res.send({ status: 500, message: "Unhandled method!" });
   }
 }

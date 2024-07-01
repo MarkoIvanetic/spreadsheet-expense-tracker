@@ -96,3 +96,36 @@ export const fetcher = async (url: string, options?: Record<any, any>) => {
   }
   return data;
 };
+
+export async function updateSheet(
+  spreadsheetId: string,
+  jwtClient: JWT,
+  sheets: sheets_v4.Sheets,
+  values: (string | number)[][]
+) {
+  const lastSheetName = await getLastSheetName(
+    spreadsheetId,
+    jwtClient,
+    sheets
+  );
+  const firstEmptyRowIndex = await findFirstEmptyCellInColumn(
+    spreadsheetId,
+    jwtClient,
+    sheets,
+    `${lastSheetName}!A:A`
+  );
+
+  const sheetRange = `${lastSheetName}!A${firstEmptyRowIndex}:D${firstEmptyRowIndex}`;
+
+  const { data } = await sheets.spreadsheets.values.update({
+    auth: jwtClient,
+    spreadsheetId,
+    valueInputOption: "USER_ENTERED",
+    range: sheetRange,
+    requestBody: {
+      values,
+    },
+  });
+
+  return data;
+}
