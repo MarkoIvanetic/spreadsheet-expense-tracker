@@ -50,6 +50,7 @@ export default async function handler(
       return res.send({
         status: 500,
         message: "Could not extract price and vendor from the text.",
+        recieved: req.body,
       });
     }
 
