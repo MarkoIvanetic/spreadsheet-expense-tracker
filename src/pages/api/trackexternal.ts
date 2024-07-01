@@ -36,11 +36,7 @@ export default async function handler(
   res: NextApiResponse
 ) {
   if (req.method === "POST") {
-    // const { category, value, description, date } = JSON.parse(req.body);
-
-    console.log("req.body:", req.body);
-
-    const { text } = JSON.parse(req.body);
+    const text = req.body as string;
 
     const variables = extractPriceAndVendor(text);
 
