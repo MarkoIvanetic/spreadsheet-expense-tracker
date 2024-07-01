@@ -16,13 +16,14 @@ import { TrackerMenu } from "./TrackerMenu";
 import { Category } from "./CategoryItem";
 
 interface ITrackerHeaderProps extends StackProps {
+  isLoading: boolean;
   selectedCategory: Category | undefined;
   onSave: (category: Category, description: string, expense: number) => void;
   ref: MutableRefObject<HTMLInputElement | undefined>;
 }
 
 export const TrackerHeader: FC<ITrackerHeaderProps> = forwardRef(
-  ({ selectedCategory, onSave }, ref) => {
+  ({ selectedCategory, isLoading, onSave }, ref) => {
     const borderColor = Boolean(selectedCategory) ? "blue.200" : "red.200";
 
     const [description, setDescription] = useState<string | undefined>("");
@@ -91,6 +92,7 @@ export const TrackerHeader: FC<ITrackerHeaderProps> = forwardRef(
           height="auto"
           colorScheme="blue"
           isDisabled={!selectedCategory?.name || !expense}
+          isLoading={isLoading}
           onClick={() => {
             if (!selectedCategory?.name || !expense) return;
 

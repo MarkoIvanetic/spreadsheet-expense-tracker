@@ -20,6 +20,7 @@ const fetcher = async (url: string, options: Record<any, any>) => {
 };
 
 const Home: NextPage<{ fallback: Record<string, any> }> = ({ fallback }) => {
+  const [isLoading, setIsLoading] = useState(false);
   const [reset, setReset] = useState(0);
 
   const [stats, setStats] = useStats();
@@ -29,6 +30,7 @@ const Home: NextPage<{ fallback: Record<string, any> }> = ({ fallback }) => {
     description: string,
     expense: number
   ) => {
+    setIsLoading(true);
     await fetcher("api/track", {
       method: "POST",
       body: JSON.stringify({
@@ -38,6 +40,9 @@ const Home: NextPage<{ fallback: Record<string, any> }> = ({ fallback }) => {
         value: expense,
       }),
     });
+
+    setIsLoading(false);
+
     setStats({
       ...stats,
       [category.id]: (stats[category.id] || 0) + 1,
@@ -55,7 +60,7 @@ const Home: NextPage<{ fallback: Record<string, any> }> = ({ fallback }) => {
       </Head>
       <main>
         <NoSSR>
-          <Tracker key={reset} onSave={saveExpense} />
+          <Tracker key={reset} isLoading={isLoading} onSave={saveExpense} />
         </NoSSR>
         <Flex as="footer" mt="10vh" px="10px" py={4} justifyContent="center">
           <Box w="min(100%, 800px)"></Box>

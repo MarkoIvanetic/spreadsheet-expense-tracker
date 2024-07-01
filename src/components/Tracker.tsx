@@ -8,10 +8,11 @@ import { TrackerViewState } from "./TrackerMenu";
 import { useStats } from "@/hooks/useStats";
 
 interface ITrackerProps extends StackProps {
+  isLoading: boolean;
   onSave: (category: Category, description: string, expense: number) => void;
 }
 
-export const Tracker: FC<ITrackerProps> = ({ onSave, ...rest }) => {
+export const Tracker: FC<ITrackerProps> = ({ onSave, isLoading, ...rest }) => {
   const inputRef = useRef<HTMLInputElement | undefined>();
 
   const [localData, setData] = useLocalStorage<Array<Category>>("api/data", []);
@@ -55,6 +56,7 @@ export const Tracker: FC<ITrackerProps> = ({ onSave, ...rest }) => {
       <TrackerHeader
         selectedCategory={selectedCategory}
         onSave={onSave}
+        isLoading={isLoading}
         ref={inputRef}
       />
       <Flex
