@@ -11,6 +11,7 @@ import {
   useColorMode,
 } from "@chakra-ui/react";
 import { Category } from "./CategoryItem";
+import { runSysCheck } from "@/utils/misc";
 
 // create an enum value called TrackerViewState containing values for grid view mode: Grid or List
 export enum TrackerViewState {
@@ -62,6 +63,9 @@ export const TrackerMenu = () => {
         </MenuItem>
         <MenuItem justifyContent="flex-start" as={Button} onClick={toggleGrid}>
           Switch to {viewMode === TrackerViewState.Grid ? "List" : "Grid"} view
+        </MenuItem>
+        <MenuItem justifyContent="flex-start" as={Button} onClick={runSysCheck}>
+          Run sys check
         </MenuItem>
         <MenuItem
           justifyContent="flex-start"

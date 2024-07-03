@@ -3,6 +3,8 @@
 import { OpenAI } from "openai";
 import { fetchWithCache } from "./cache";
 
+// UNUSED - switched to free bard
+
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
 export async function recognizeCategory(promptText: string): Promise<string> {

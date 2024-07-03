@@ -2,7 +2,6 @@
 
 import { NextApiRequest, NextApiResponse } from "next";
 import { getJwtClient, updateSheet } from "@/utils/api";
-import { recognizeCategory } from "@/utils/chatGPT";
 import { google } from "googleapis";
 
 interface NotificationData {
@@ -48,19 +47,47 @@ export default async function handler(
 
     const { price, vendor } = variables;
 
-    // Get category from ChatGPT
-    const category = await recognizeCategory(text);
+    console.log("vendor:", vendor);
 
-    const jwtClient = await getJwtClient();
-    const spreadsheetId = process.env.SPREADSHEET_ID || "";
-    const sheets = google.sheets("v4");
+    // Get category from new API endpoint
+    try {
+      const response = await fetch(
+        `${process.env.API_HOST}/api/detectCategory`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ vendor }),
+        }
+      );
 
-    const data = await updateSheet(spreadsheetId, jwtClient, sheets, [
-      [category, price, `Auto: ${vendor}`, new Date().toDateString()],
-    ]);
+      if (!response.ok) {
+        throw new Error("Failed to detect category");
+      }
 
-    return res.send({ status: 200, message: data });
+      const { category } = await response.json();
+
+      const jwtClient = await getJwtClient();
+      const spreadsheetId = process.env.SPREADSHEET_ID || "";
+      const sheets = google.sheets("v4");
+
+      const data = await updateSheet(spreadsheetId, jwtClient, sheets, [
+        [category, price, `Auto: ${vendor}`, new Date().toDateString()],
+      ]);
+
+      return res.send({ status: 200, message: data });
+    } catch (error: any) {
+      return res.status(500).send({
+        status: 500,
+        message: "Error detecting category.",
+        error: error.message,
+      });
+    }
   } else {
-    return res.send({ status: 500, message: "Unhandled method!" });
+    return res.status(405).send({
+      status: 405,
+      message: "Method not allowed.",
+    });
   }
 }

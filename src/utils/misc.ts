@@ -17,3 +17,15 @@ export function getFirstEmoji(str: string | undefined) {
     return null;
   }
 }
+
+export const runSysCheck = async () => {
+  console.log("SysCheck started...");
+
+  // try {
+  //   const promptText = "Paid $22.25 at Konzum Spent today: $30.0";
+  //   const category = await recognizeCategory(promptText);
+  //   console.log("category:", category);
+  // } catch (error: any) {
+  //   console.log("SysCheck failed::", error.message);
+  // }
+};
