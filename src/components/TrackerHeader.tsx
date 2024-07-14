@@ -10,14 +10,15 @@ import {
   forwardRef,
 } from "@chakra-ui/react";
 
+import { useTrackerContext } from "@/TrackerContext";
 import { getFirstEmoji } from "@/utils/misc";
 import { FC, MutableRefObject, useState } from "react";
-import { TrackerMenu } from "./TrackerMenu";
 import { Category } from "./CategoryItem";
+import { TrackerMenu } from "./TrackerMenu";
 
 interface ITrackerHeaderProps extends StackProps {
   isLoading: boolean;
-  selectedCategory: Category | undefined;
+  selectedCategory: Category | null;
   onSave: (category: Category, description: string, expense: number) => void;
   ref: MutableRefObject<HTMLInputElement | undefined>;
 }
@@ -26,9 +27,10 @@ export const TrackerHeader: FC<ITrackerHeaderProps> = forwardRef(
   ({ selectedCategory, isLoading, onSave }, ref) => {
     const borderColor = Boolean(selectedCategory) ? "blue.200" : "red.200";
 
-    const [description, setDescription] = useState<string | undefined>("");
+    const { description, setDescription } = useTrackerContext();
 
-    const [expense, setExpense] = useState<number>();
+    const { inputValue, setInputValue: setInputValue } =
+      useTrackerContext();
 
     return (
       <Flex mb={5} gap={3} flexDir="row" w="min(90%, 800px)" px="16px">
@@ -53,15 +55,16 @@ export const TrackerHeader: FC<ITrackerHeaderProps> = forwardRef(
             />
             <Input
               w="100%"
+              id="expense-input"
               _focusVisible={{
                 borderColor: borderColor,
               }}
               ref={ref}
-              value={expense}
+              value={inputValue}
               p="10px 4.5rem 10px 40px"
               type="number"
               placeholder="Enter expense"
-              onChange={(e) => setExpense(+e.target.value)}
+              onChange={(e) => setInputValue(+e.target.value)}
             />
           </InputGroup>
           <InputGroup
@@ -91,12 +94,12 @@ export const TrackerHeader: FC<ITrackerHeaderProps> = forwardRef(
           w="200px"
           height="auto"
           colorScheme="blue"
-          isDisabled={!selectedCategory?.name || !expense}
+          isDisabled={!selectedCategory?.name || !inputValue}
           isLoading={isLoading}
           onClick={() => {
-            if (!selectedCategory?.name || !expense) return;
+            if (!selectedCategory?.name || !inputValue) return;
 
-            onSave(selectedCategory, description || "", expense);
+            onSave(selectedCategory, description || "", inputValue);
           }}
         >
           Add record

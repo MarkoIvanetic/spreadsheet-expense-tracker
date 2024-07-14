@@ -1,4 +1,5 @@
 import { Tracker } from "@/components/Tracker";
+import { Unverified } from "@/components/Unverified";
 import { Box, Flex } from "@chakra-ui/react";
 import { NextPage } from "next";
 import Head from "next/head";
@@ -8,6 +9,12 @@ import { SWRConfig } from "swr";
 import { Category } from "@/components/CategoryItem";
 import { useStats } from "@/hooks/useStats";
 import NoSSR from "@/utils/NoSSR";
+
+import trackerConfig from "../../tracker.config";
+
+try {
+  window.trackerConfig = trackerConfig;
+} catch (error) {}
 
 const fetcher = async (url: string, options: Record<any, any>) => {
   const res = await fetch(url, options);
@@ -61,6 +68,7 @@ const Home: NextPage<{ fallback: Record<string, any> }> = ({ fallback }) => {
       <main>
         <NoSSR>
           <Tracker key={reset} isLoading={isLoading} onSave={saveExpense} />
+          <Unverified key={reset} isLoading={isLoading} onSave={saveExpense} />
         </NoSSR>
         <Flex as="footer" mt="10vh" px="10px" py={4} justifyContent="center">
           <Box w="min(100%, 800px)"></Box>

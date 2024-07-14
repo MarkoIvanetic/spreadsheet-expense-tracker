@@ -1,8 +1,7 @@
 // src/pages/api/trackexternal.ts
 
+import { addUnverifiedExpense } from "@/utils/api";
 import { NextApiRequest, NextApiResponse } from "next";
-import { getJwtClient, updateSheet } from "@/utils/api";
-import { google } from "googleapis";
 
 interface NotificationData {
   price: string;
@@ -68,13 +67,11 @@ export default async function handler(
 
       const { category } = await response.json();
 
-      const jwtClient = await getJwtClient();
-      const spreadsheetId = process.env.SPREADSHEET_ID || "";
-      const sheets = google.sheets("v4");
-
-      const data = await updateSheet(spreadsheetId, jwtClient, sheets, [
+      const values = [
         [category, price, `Auto: ${vendor}`, new Date().toDateString()],
-      ]);
+      ];
+
+      const data = await addUnverifiedExpense(values);
 
       return res.send({ status: 200, message: data });
     } catch (error: any) {

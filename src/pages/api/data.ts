@@ -1,33 +1,26 @@
 import { NextApiRequest, NextApiResponse } from "next";
 
-import { getCategoryData, getJwtClient } from "@/utils/api";
-import { google } from "googleapis";
+import { fetchCategoryData } from "@/utils/api";
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  console.log("req.method:", req.method);
-
   if (req.method === "GET") {
-    let jwtClient = await getJwtClient();
-    let spreadsheetId = process.env.SPREADSHEET_ID || "";
+    try {
+      const formattedData = await fetchCategoryData();
 
-    let sheets = google.sheets("v4");
-
-    const data =
-      (await getCategoryData(spreadsheetId, jwtClient, sheets)) || [];
-
-    const formattedData = data.map((item) => {
-      return {
-        name: item[0],
-        color: item[1],
-        id: item[2],
-      };
-    });
-
-    return res.status(200).json(formattedData);
+      return res.status(200).json(formattedData);
+    } catch (error: any) {
+      return res.status(500).json({
+        status: 500,
+        message: "Error fetching category data.",
+        error: error.message,
+      });
+    }
   } else {
-    return res.send({ status: 500, message: "Unhadled method!" });
+    return res
+      .status(405)
+      .json({ status: 405, message: "Method not allowed." });
   }
 }

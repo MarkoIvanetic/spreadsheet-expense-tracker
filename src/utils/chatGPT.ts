@@ -14,10 +14,12 @@ export async function recognizeCategory(promptText: string): Promise<string> {
       .map((item: { name: string }) => item.name)
       .join(", ");
 
+    console.log("categoryList:", categoryList);
+
     const prompt = `Here is a list of possible categories: ${categoryList}. Please recognize the category for the following text and return only the category name: ${promptText}`;
 
     const response = await openai.chat.completions.create({
-      model: "gpt-4",
+      model: "gpt-3.5-turbo",
       messages: [
         { role: "system", content: "You are a helpful assistant." },
         { role: "user", content: prompt },

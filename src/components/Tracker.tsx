@@ -1,11 +1,13 @@
 import { Flex, StackProps, VStack } from "@chakra-ui/react";
 
+import { useTrackerContext } from "@/TrackerContext";
 import { Category, CategoryItem } from "@/components/CategoryItem";
 import { useLocalStorage } from "@/hooks/useLocalStorage";
-import { FC, useEffect, useRef, useState } from "react";
+import { useStats } from "@/hooks/useStats";
+import { FC, useEffect, useRef } from "react";
 import { TrackerHeader } from "./TrackerHeader";
 import { TrackerViewState } from "./TrackerMenu";
-import { useStats } from "@/hooks/useStats";
+import { useToast } from "@chakra-ui/react";
 
 interface ITrackerProps extends StackProps {
   isLoading: boolean;
@@ -16,7 +18,10 @@ export const Tracker: FC<ITrackerProps> = ({ onSave, isLoading, ...rest }) => {
   const inputRef = useRef<HTMLInputElement | undefined>();
 
   const [localData, setData] = useLocalStorage<Array<Category>>("api/data", []);
-  const [stats] = useStats()
+  const [stats] = useStats();
+
+  const toast = useToast();
+
   const [viewMode, setViewMode] = useLocalStorage(
     "et-view",
     TrackerViewState.Grid
@@ -37,12 +42,17 @@ export const Tracker: FC<ITrackerProps> = ({ onSave, isLoading, ...rest }) => {
       .then((response) => response.json())
       .then((response) => {
         setData(response);
+        toast({
+          title: "Data refreshed.",
+          description: "Categories synced with google sheet",
+          status: "success",
+          duration: 1000,
+          isClosable: true,
+        });
       });
   }, []);
 
-  const [selectedCategory, setSelectedCategory] = useState<
-    Category | undefined
-  >(undefined);
+  const { selectedCategory, setSelectedCategory } = useTrackerContext();
 
   return (
     <VStack

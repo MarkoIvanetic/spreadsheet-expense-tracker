@@ -1,5 +1,7 @@
 import { google, sheets_v4 } from "googleapis";
 import { JWT } from "google-auth-library";
+import trackerConfig from "../../tracker.config";
+import { CategoryData } from "@/types";
 
 export async function findFirstEmptyCellInColumn(
   spreadsheetId: string,
@@ -14,7 +16,7 @@ export async function findFirstEmptyCellInColumn(
   });
 
   if (!getData.values || getData.values.length === 0) {
-    return null;
+    return 1;
   }
 
   return getData.values.length + 1;
@@ -24,18 +26,16 @@ export async function getJwtClient() {
   const jwtClient = new google.auth.JWT(
     process.env.CLIENT_EMAIL,
     undefined,
-    //   secretKey.private_key,
     process.env.PRIVATE_KEY?.replace(/\\n/g, "\n"),
     ["https://www.googleapis.com/auth/spreadsheets"]
   );
 
-  //authenticate request
   jwtClient.authorize(function (err) {
     if (err) {
-      console.log(err);
+      console.log("❌ Error authenticating:", err);
       return;
     } else {
-      console.log("Successfully connected!");
+      console.log("✅ Successfully connected!");
     }
   });
 
@@ -96,26 +96,101 @@ export const fetcher = async (url: string, options?: Record<any, any>) => {
   }
   return data;
 };
+export async function getSheetIdByName(
+  spreadsheetId: string,
+  jwtClient: any,
+  sheets: any,
+  sheetName: string
+) {
+  const { data } = await sheets.spreadsheets.get({
+    auth: jwtClient,
+    spreadsheetId,
+  });
+  const sheet = data.sheets.find((s: any) => s.properties.title === sheetName);
+  return sheet.properties.sheetId;
+}
+
+// Helper function to fetch all rows from a sheet
+export async function getAllRows(
+  spreadsheetId: string,
+  jwtClient: any,
+  sheets: any,
+  sheetName: string
+) {
+  const range = `${sheetName}!A:D`;
+  const { data } = await sheets.spreadsheets.values.get({
+    auth: jwtClient,
+    spreadsheetId,
+    range,
+  });
+  return data.values
+    ? data.values.map((row: number, index: number) => ({ id: index + 1, row }))
+    : [];
+}
+
+// Helper function to delete a row by row index
+export async function deleteRow(
+  spreadsheetId: string,
+  jwtClient: any,
+  sheets: any,
+  sheetName: string,
+  rowIndex: number
+) {
+  const requests = [
+    {
+      deleteDimension: {
+        range: {
+          sheetId: await getSheetIdByName(
+            spreadsheetId,
+            jwtClient,
+            sheets,
+            sheetName
+          ),
+          dimension: "ROWS",
+          startIndex: rowIndex - 1, // Google Sheets API is zero-based
+          endIndex: rowIndex, // End index is exclusive
+        },
+      },
+    },
+  ];
+  await sheets.spreadsheets.batchUpdate({
+    auth: jwtClient,
+    spreadsheetId,
+    requestBody: {
+      requests,
+    },
+  });
+}
 
 export async function updateSheet(
   spreadsheetId: string,
   jwtClient: JWT,
   sheets: sheets_v4.Sheets,
-  values: (string | number)[][]
+  values: (string | number)[][],
+  sheetName?: string
 ) {
-  const lastSheetName = await getLastSheetName(
-    spreadsheetId,
-    jwtClient,
-    sheets
-  );
+  // const jwtClient = await getJwtClient();
+  // const spreadsheetId = process.env.SPREADSHEET_ID || "";
+  // const sheets = google.sheets("v4");
+
+  console.log("📄 Starting updateSheet function...");
+  console.log("📊 Spreadsheet ID:", spreadsheetId);
+  console.log("📝 Sheet Name:", sheetName);
+
+  const lastSheetName =
+    sheetName || (await getLastSheetName(spreadsheetId, jwtClient, sheets));
+  console.log("📋 Last Sheet Name:", lastSheetName);
+
   const firstEmptyRowIndex = await findFirstEmptyCellInColumn(
     spreadsheetId,
     jwtClient,
     sheets,
     `${lastSheetName}!A:A`
   );
+  console.log("📈 First Empty Row Index:", firstEmptyRowIndex);
 
   const sheetRange = `${lastSheetName}!A${firstEmptyRowIndex}:D${firstEmptyRowIndex}`;
+  console.log("📌 Sheet Range:", sheetRange);
 
   const { data } = await sheets.spreadsheets.values.update({
     auth: jwtClient,
@@ -127,5 +202,55 @@ export async function updateSheet(
     },
   });
 
+  console.log("✅ Update successful:", data);
   return data;
 }
+
+export async function addUnverifiedExpense(
+  values: (string | number)[][]
+): Promise<void> {
+  console.log("🟢 Starting addUnverifiedExpense function...");
+
+  let jwtClient: JWT;
+  try {
+    jwtClient = await getJwtClient();
+  } catch (error) {
+    console.log("❌ Error getting JWT client:", error);
+    throw error;
+  }
+
+  const spreadsheetId = process.env.SPREADSHEET_ID || "";
+  const sheets = google.sheets("v4");
+
+  try {
+    const data = await updateSheet(
+      spreadsheetId,
+      jwtClient,
+      sheets,
+      values,
+      trackerConfig.unverifiedSheetName
+    );
+    console.log("✅ Expense added successfully:", data);
+  } catch (error) {
+    console.log("❌ Error adding expense:", error);
+    throw error;
+  }
+}
+
+export const fetchCategoryData = async (): Promise<CategoryData[]> => {
+  const jwtClient = await getJwtClient();
+  const spreadsheetId = process.env.SPREADSHEET_ID || "";
+  const sheets = google.sheets("v4");
+
+  const data = (await getCategoryData(spreadsheetId, jwtClient, sheets)) || [];
+
+  const formattedData = data.map((item: any) => {
+    return {
+      name: item[0],
+      color: item[1],
+      id: item[2],
+    };
+  });
+
+  return formattedData;
+};
