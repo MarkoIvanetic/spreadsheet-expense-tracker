@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
 
-import { fetchCategoryData } from "@/utils/api";
+import { fetchCategoryData } from "@/utils/apiServer";
 
 export default async function handler(
   req: NextApiRequest,

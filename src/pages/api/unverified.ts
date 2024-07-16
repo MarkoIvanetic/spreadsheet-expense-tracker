@@ -1,5 +1,10 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { deleteRow, getAllRows, getJwtClient, updateSheet } from "@/utils/api";
+import {
+  deleteRow,
+  getAllRows,
+  getJwtClient,
+  updateSheet,
+} from "@/utils/apiServer";
 import { google } from "googleapis";
 import trackerConfig from "../../../tracker.config";
 
@@ -11,6 +16,8 @@ export default async function handler(
   const jwtClient = await getJwtClient();
   const spreadsheetId = process.env.SPREADSHEET_ID || "";
   const sheets = google.sheets("v4");
+
+  console.log(`[${req.method}] - body: ${JSON.stringify(req.body)}`);
 
   if (req.method === "GET") {
     try {
@@ -57,7 +64,7 @@ export default async function handler(
       });
     }
   } else if (req.method === "DELETE") {
-    const { rowIndex } = req.body;
+    const { rowIndex } = JSON.parse(req.body);
     if (rowIndex === undefined) {
       return res
         .status(400)

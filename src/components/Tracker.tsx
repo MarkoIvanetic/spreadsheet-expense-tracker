@@ -1,13 +1,14 @@
-import { Flex, StackProps, VStack } from "@chakra-ui/react";
+import { Box, Flex, HStack, Heading, StackProps, VStack } from "@chakra-ui/react";
 
 import { useTrackerContext } from "@/TrackerContext";
-import { Category, CategoryItem } from "@/components/CategoryItem";
+import { CategoryItem } from "@/components/CategoryItem";
+import { useCategories } from "@/hooks/useCategories";
 import { useLocalStorage } from "@/hooks/useLocalStorage";
 import { useStats } from "@/hooks/useStats";
-import { FC, useEffect, useRef } from "react";
+import { Category } from "@/types";
+import { FC, useRef } from "react";
 import { TrackerHeader } from "./TrackerHeader";
-import { TrackerViewState } from "./TrackerMenu";
-import { useToast } from "@chakra-ui/react";
+import { TrackerMenu, TrackerViewState } from "./TrackerMenu";
 
 interface ITrackerProps extends StackProps {
   isLoading: boolean;
@@ -17,15 +18,11 @@ interface ITrackerProps extends StackProps {
 export const Tracker: FC<ITrackerProps> = ({ onSave, isLoading, ...rest }) => {
   const inputRef = useRef<HTMLInputElement | undefined>();
 
-  const [localData, setData] = useLocalStorage<Array<Category>>("api/data", []);
+  const { data: categories, isLoading: isLoadingCategories } = useCategories();
+
   const [stats] = useStats();
 
-  const toast = useToast();
-
-  const [viewMode, setViewMode] = useLocalStorage(
-    "et-view",
-    TrackerViewState.Grid
-  );
+  const [viewMode] = useLocalStorage("et-view", TrackerViewState.Grid);
 
   const categorySortFunction = (a: Category, b: Category) => {
     const aId = a.id;
@@ -36,21 +33,6 @@ export const Tracker: FC<ITrackerProps> = ({ onSave, isLoading, ...rest }) => {
 
     return occurrenceB - occurrenceA;
   };
-
-  useEffect(() => {
-    fetch("api/data")
-      .then((response) => response.json())
-      .then((response) => {
-        setData(response);
-        toast({
-          title: "Data refreshed.",
-          description: "Categories synced with google sheet",
-          status: "success",
-          duration: 1000,
-          isClosable: true,
-        });
-      });
-  }, []);
 
   const { selectedCategory, setSelectedCategory } = useTrackerContext();
 
@@ -63,6 +45,12 @@ export const Tracker: FC<ITrackerProps> = ({ onSave, isLoading, ...rest }) => {
       minW="400px"
       {...rest}
     >
+      <HStack justify="space-between" w="100%" p="10px 6px 20px 0px">
+        <Heading as="h1">GS Expense Tracker</Heading>
+        <Box w="24px">
+          <TrackerMenu />
+        </Box>
+      </HStack>
       <TrackerHeader
         selectedCategory={selectedCategory}
         onSave={onSave}
@@ -78,7 +66,7 @@ export const Tracker: FC<ITrackerProps> = ({ onSave, isLoading, ...rest }) => {
         gap="10px"
         w="min(100%, 800px)"
       >
-        {localData?.sort(categorySortFunction)?.map((item: Category) => {
+        {categories?.sort(categorySortFunction)?.map((item: Category) => {
           return (
             <CategoryItem
               onClick={() => {

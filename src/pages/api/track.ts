@@ -1,7 +1,7 @@
 // src/pages/api/track.ts
 
 import { NextApiRequest, NextApiResponse } from "next";
-import { getJwtClient, updateSheet } from "@/utils/api";
+import { getJwtClient, updateSheet } from "@/utils/apiServer";
 import { google } from "googleapis";
 
 export default async function handler(

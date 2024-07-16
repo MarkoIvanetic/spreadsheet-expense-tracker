@@ -1,16 +1,16 @@
 import { Tracker } from "@/components/Tracker";
 import { Unverified } from "@/components/Unverified";
-import { Box, Flex } from "@chakra-ui/react";
+import { Box, Divider, Flex } from "@chakra-ui/react";
 import { NextPage } from "next";
 import Head from "next/head";
 import { useState } from "react";
 import { SWRConfig } from "swr";
 
-import { Category } from "@/components/CategoryItem";
 import { useStats } from "@/hooks/useStats";
 import NoSSR from "@/utils/NoSSR";
 
 import trackerConfig from "../../tracker.config";
+import { Category } from "@/types";
 
 try {
   window.trackerConfig = trackerConfig;
@@ -38,6 +38,7 @@ const Home: NextPage<{ fallback: Record<string, any> }> = ({ fallback }) => {
     expense: number
   ) => {
     setIsLoading(true);
+
     await fetcher("api/track", {
       method: "POST",
       body: JSON.stringify({
@@ -54,6 +55,7 @@ const Home: NextPage<{ fallback: Record<string, any> }> = ({ fallback }) => {
       ...stats,
       [category.id]: (stats[category.id] || 0) + 1,
     });
+
     setReset((x) => x + 1);
   };
 
@@ -68,7 +70,8 @@ const Home: NextPage<{ fallback: Record<string, any> }> = ({ fallback }) => {
       <main>
         <NoSSR>
           <Tracker key={reset} isLoading={isLoading} onSave={saveExpense} />
-          <Unverified key={reset} isLoading={isLoading} onSave={saveExpense} />
+             <Divider py={2}/>
+          <Unverified isLoading={isLoading} onSave={saveExpense} />
         </NoSSR>
         <Flex as="footer" mt="10vh" px="10px" py={4} justifyContent="center">
           <Box w="min(100%, 800px)"></Box>

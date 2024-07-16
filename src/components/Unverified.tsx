@@ -1,16 +1,26 @@
 import { useTrackerContext } from "@/TrackerContext";
-import { Category } from "@/components/CategoryItem";
 import { useLocalStorage } from "@/hooks/useLocalStorage";
-import { RowData } from "@/types";
-import { findBestMatchIndex, focusInputById } from "@/utils/misc";
+import { Category, RowData } from "@/types";
+import {
+  findBestCategoryMatchByName,
+  findBestMatchIndex,
+  focusInputById,
+} from "@/utils/misc";
 import {
   Circle,
+  Divider,
   HStack,
+  Heading,
+  StackDivider,
   StackProps,
   Text,
-  VStack
+  VStack,
 } from "@chakra-ui/react";
-import { FC, useEffect, useState } from "react";
+import { FC } from "react";
+
+import { fetchUnverifiedData } from "@/utils/apiLocal";
+import { useQuery } from "@tanstack/react-query";
+import { getCategoriesLocal, useCategories } from "@/hooks/useCategories";
 
 interface IUnverifiedProps extends StackProps {
   isLoading: boolean;
@@ -22,44 +32,38 @@ export const Unverified: FC<IUnverifiedProps> = ({
   isLoading,
   ...rest
 }) => {
-  const [unverified, setUnverified] = useState<Array<RowData>>([]);
+  const {
+    setSelectedCategory,
+    setInputValue,
+    setDescription,
+    setSelectedUnverifiedExpenseId,
+  } = useTrackerContext();
 
-  const [localData] = useLocalStorage<Array<Category>>("api/data", []);
+  const {
+    data: unverified,
+    error,
+    isPending,
+    isError,
+  } = useQuery({
+    queryKey: ["unverified"],
+    queryFn: fetchUnverifiedData,
+    staleTime: Infinity,
+  });
 
-  const allCategoryNames = localData.map((category) => category.name);
-
-  const { setSelectedCategory, setInputValue, setDescription } =
-    useTrackerContext();
-
-  useEffect(() => {
-    fetch("api/unverified")
-      .then((response) => response.json())
-      .then((response: Array<RowData>) => {
-        setUnverified(response);
-      });
-  }, []);
-
-  const handleOnClick = (item: RowData) => {
+  const handleOnClick = (item: RowData, category: Category) => {
     const [categoryName, price, description, time] = item.row;
 
-    const bestMatchCategoryIndex = findBestMatchIndex(
-      categoryName,
-      allCategoryNames
-    );
-
-    const category = localData[bestMatchCategoryIndex];
-
     setSelectedCategory(category);
+    setSelectedUnverifiedExpenseId(item.id);
     setInputValue(price);
     setDescription(description);
 
-    fetch("api/unverified", {
-      method: "DELETE",
-      body: JSON.stringify({ rowIndex: item.id }),
-    });
-
     focusInputById("expense-input");
   };
+
+  if (isPending) return <div>Loading...</div>;
+
+  if (isError) return <div>{JSON.stringify(error, null, 2)}</div>;
 
   return (
     <VStack
@@ -70,29 +74,51 @@ export const Unverified: FC<IUnverifiedProps> = ({
       minW="400px"
       {...rest}
     >
+      <Heading as="h2" size="md" py={2}>
+        Pending auto expenses
+      </Heading>
+
+      {unverified.length === 0 && (
+        <Text fontSize={14} color="gray.400">
+          No unverified expenses
+        </Text>
+      )}
+
       {unverified.map((item: RowData) => {
-        const [category, price, description, time] = item.row;
+        const [categoryName, price, description, time] = item.row;
+
+        const category = findBestCategoryMatchByName(categoryName);
 
         return (
-          <HStack as="button" onClick={() => handleOnClick(item)}>
-            <Circle
-              bg="#97266D"
-              // border={isSelected ? "2px solid gold" : "2px solid transparent"}
-              minW="85px"
-              py="12px"
-              _hover={{
-                bg: "#97266D",
-                border: "2px solid white",
-              }}
+          <Circle
+            key={item.id}
+            as="button"
+            bg={category.color}
+            minW="85px"
+            p="12px"
+            _hover={{
+              border: "none",
+            }}
+          >
+            <HStack
+              divider={<StackDivider />}
+              as="button"
+              onClick={() => handleOnClick(item, category)}
             >
               <Text whiteSpace="break-spaces" fontSize={12} color="white">
-                {category}
+                {categoryName}
               </Text>
-            </Circle>
-            <Text whiteSpace="break-spaces" fontSize={12} color="white">
-              {price + " " + description + " " + time}{" "}
-            </Text>
-          </HStack>
+              <Text whiteSpace="break-spaces" fontSize={12} color="white">
+                €{price}
+              </Text>
+              <Text whiteSpace="break-spaces" fontSize={12} color="white">
+                {description}
+              </Text>
+              <Text whiteSpace="break-spaces" fontSize={12} color="white">
+                {time}
+              </Text>
+            </HStack>
+          </Circle>
         );
       })}
     </VStack>

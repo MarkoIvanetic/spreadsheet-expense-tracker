@@ -13,17 +13,35 @@ interface TrackerContextProps {
   setInputValue: (value: number) => void;
   description: string;
   setDescription: (desc: string) => void;
+  selectedUnverifiedId: number | undefined;
+  setSelectedUnverifiedExpenseId: (id: number | undefined) => void;
+  removeUnverifiedExpense: (id: number) => void;
+  resetInputs: () => void;
 }
 
 const TrackerContext = createContext<TrackerContextProps | undefined>(undefined);
 
 export const TrackerProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [selectedCategory, setSelectedCategory] = useState<Category | null>(null);
+  const [selectedUnverifiedId, setSelectedUnverifiedExpenseId] = useState<number | undefined>();
   const [inputValue, setInputValue] = useState<number>(0);
   const [description, setDescription] = useState<string>('');
 
+  const removeUnverifiedExpense = (id: number) => {
+    fetch('api/unverified', {
+      method: 'DELETE',
+      body: JSON.stringify({ rowIndex: id }),
+    });
+  }
+
+  const resetInputs = () => {
+    setInputValue(0)
+    setDescription('')
+    setSelectedUnverifiedExpenseId(undefined)
+  }
+
   return (
-    <TrackerContext.Provider value={{ selectedCategory, setSelectedCategory, inputValue, setInputValue, description, setDescription }}>
+    <TrackerContext.Provider value={{ selectedCategory, setSelectedCategory, selectedUnverifiedId, setSelectedUnverifiedExpenseId, removeUnverifiedExpense, inputValue, setInputValue, resetInputs, description, setDescription }}>
       {children}
     </TrackerContext.Provider>
   );

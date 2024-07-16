@@ -1,6 +1,6 @@
 // src/pages/api/trackexternal.ts
 
-import { addUnverifiedExpense } from "@/utils/api";
+import { addUnverifiedExpense } from "@/utils/apiServer";
 import { NextApiRequest, NextApiResponse } from "next";
 
 interface NotificationData {

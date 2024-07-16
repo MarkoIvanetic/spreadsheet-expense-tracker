@@ -1,3 +1,4 @@
+import { getCategoriesLocal } from "@/hooks/useCategories";
 import stringSimilarity from "string-similarity";
 
 export const generateArray = (n: number) => {
@@ -51,4 +52,19 @@ export const findBestMatchIndex = (
 ): number => {
   const bestMatch = stringSimilarity.findBestMatch(target, options);
   return bestMatch.bestMatchIndex;
+};
+
+export const findBestCategoryMatchByName = (categoryName: string) => {
+  const categories = getCategoriesLocal();
+
+  const allCategoryNames = categories.map((category) => category.name);
+
+  const bestMatchCategoryIndex = findBestMatchIndex(
+    categoryName,
+    allCategoryNames
+  );
+
+  const category = categories[bestMatchCategoryIndex];
+
+  return category;
 };

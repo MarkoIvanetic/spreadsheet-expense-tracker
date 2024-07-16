@@ -1,3 +1,4 @@
+import { Category } from "@/types";
 import {
   Button,
   ButtonProps,
@@ -6,12 +7,6 @@ import {
   Text,
 } from "@chakra-ui/react";
 import { FC } from "react";
-
-export interface Category {
-  id: string;
-  name: string;
-  color: string;
-}
 
 interface CategoryItemProps extends ButtonProps {
   category: Category;
