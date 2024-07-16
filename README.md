@@ -3,6 +3,10 @@
 This app uses google spreadsheet as a database for tracking expanses.
 See the full backend setup here: [How to Use Google Sheets As a Database For Your Business](https://blog.coupler.io/how-to-use-google-sheets-as-database/#Use_Google_Sheets_as_a_database_for_a_website)
 
+
+![image](https://github.com/user-attachments/assets/987201f7-0100-4956-a8ff-17922dbe5408)
+
+
 ## Getting Started
 
 ### Install dependencies:
