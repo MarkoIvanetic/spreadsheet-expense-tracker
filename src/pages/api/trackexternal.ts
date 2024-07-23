@@ -50,26 +50,29 @@ export default async function handler(
     console.log("vendor:", vendor);
 
     // Get category from new API endpoint
-    // Get category from new API endpoint
     try {
-      const response = await axios.post(
-        `${process.env.API_HOST}/api/detectCategory`,
-        {
-          vendor,
-        },
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-          timeout: 30000, // Set timeout to 30 seconds
-        }
-      );
+      // skip because its slow
 
-      if (response.status !== 200) {
-        throw new Error("Failed to detect category");
-      }
+      // const response = await axios.post(
+      //   `${process.env.API_HOST}/api/detectCategory`,
+      //   {
+      //     vendor,
+      //   },
+      //   {
+      //     headers: {
+      //       "Content-Type": "application/json",
+      //     },
+      //     timeout: 30000, // Set timeout to 30 seconds
+      //   }
+      // );
 
-      const { category } = response.data;
+      // if (response.status !== 200) {
+      //   throw new Error("Failed to detect category");
+      // }
+
+      // const { category } = response.data;
+
+      const category = "❓No idea";
 
       const values = [
         [category, price, `Auto: ${vendor}`, new Date().toDateString()],
