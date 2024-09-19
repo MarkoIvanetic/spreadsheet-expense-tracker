@@ -1,4 +1,5 @@
 import { getCategoriesLocal } from "@/hooks/useCategories";
+import { matchingData } from "@/utils/localData";
 import stringSimilarity from "string-similarity";
 
 export const generateArray = (n: number) => {
@@ -67,4 +68,35 @@ export const findBestCategoryMatchByName = (categoryName: string) => {
   const category = categories[bestMatchCategoryIndex];
 
   return category;
+};
+
+export const performManualCategoryMatching = (
+  expenseDescription: string,
+  price: string
+) => {
+  // Convert the expense description to lowercase
+  const lowerCaseDescription = expenseDescription.toLowerCase();
+  // Convert the price from string to number
+  const numericPrice = parseFloat(price);
+
+  // Iterate through the matchingData array
+  for (const data of matchingData) {
+    // Merge the 'includes' array into a space-separated string and convert to lowercase
+    const mergedIncludes = data.includes.join(" ").toLowerCase();
+
+    // Check if the expense description is part of the mergedIncludes
+    if (mergedIncludes.includes(lowerCaseDescription)) {
+      // Check if 'priceBelow' exists and if it matches the price condition
+      if (data.priceBelow !== undefined) {
+        if (numericPrice < data.priceBelow) {
+          return data.category; // Return the matching category when price condition is satisfied
+        }
+      } else {
+        return data.category; // Return the matching category if no price condition
+      }
+    }
+  }
+
+  // If no match is found, return null or a default value
+  return null;
 };

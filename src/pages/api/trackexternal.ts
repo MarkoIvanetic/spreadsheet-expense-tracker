@@ -1,6 +1,7 @@
 // src/pages/api/trackexternal.ts
 
 import { addUnverifiedExpense } from "@/utils/apiServer";
+import { performManualCategoryMatching } from "@/utils/misc";
 import axios from "axios";
 import { NextApiRequest, NextApiResponse } from "next";
 
@@ -51,7 +52,7 @@ export default async function handler(
 
     // Get category from new API endpoint
     try {
-      // skip because its slow
+      // TODO: skip because its slow
 
       // const response = await axios.post(
       //   `${process.env.API_HOST}/api/detectCategory`,
@@ -72,7 +73,8 @@ export default async function handler(
 
       // const { category } = response.data;
 
-      const category = "❓No idea";
+      const category =
+        performManualCategoryMatching(vendor, price) || "❓No idea";
 
       const values = [
         [category, price, `Auto: ${vendor}`, new Date().toDateString()],
