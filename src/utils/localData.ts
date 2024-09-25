@@ -28,7 +28,7 @@ export interface MatchingData {
 
 export const matchingData: Array<MatchingData> = [
   { includes: ["WoltEUR", "Mlinar", "Pekara"], category: categoriesLocal.food },
-  { includes: ["INTERSPAR"], category: categoriesLocal.groceries },
+  { includes: ["INTERSPAR", "Konzum"], category: categoriesLocal.groceries },
   {
     includes: ["PetrolEUR", "INAEUR", "Tifon"],
     priceBelow: 12,

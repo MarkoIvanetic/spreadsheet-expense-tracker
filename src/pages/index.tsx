@@ -44,7 +44,7 @@ const Home: NextPage<{ fallback: Record<string, any> }> = ({ fallback }) => {
       body: JSON.stringify({
         category: category.name,
         description: description || "",
-        date: new Date().toDateString(),
+        date: new Date().toISOString(),
         value: expense,
       }),
     });

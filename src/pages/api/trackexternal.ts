@@ -1,6 +1,9 @@
 // src/pages/api/trackexternal.ts
 
-import { addUnverifiedExpense } from "@/utils/apiServer";
+import {
+  addUnverifiedExpense,
+  formatDateTimeForSheets,
+} from "@/utils/apiServer";
 import { performManualCategoryMatching } from "@/utils/misc";
 import axios from "axios";
 import { NextApiRequest, NextApiResponse } from "next";
@@ -77,7 +80,12 @@ export default async function handler(
         performManualCategoryMatching(vendor, price) || "❓No idea";
 
       const values = [
-        [category, price, `Auto: ${vendor}`, new Date().toDateString()],
+        [
+          category,
+          price,
+          `Auto: ${vendor}`,
+          formatDateTimeForSheets(new Date()),
+        ],
       ];
 
       const data = await addUnverifiedExpense(values);

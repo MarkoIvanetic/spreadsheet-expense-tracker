@@ -41,6 +41,7 @@ export default async function handler(
     }
 
     const categories = await fetchWithCache(`${process.env.API_HOST}/api/data`);
+
     const categoryList = categories
       .map((item: { name: string }) => item.name)
       .join(", ");
