@@ -19,3 +19,11 @@ export interface Category {
   name: string;
   color: string;
 }
+
+export interface BudgetData {
+  totalExpenses: number;
+  necessitiesBudget: number;
+  wantsBudget: number;
+  necessitiesExpense: number;
+  wantsExpense: number;
+}

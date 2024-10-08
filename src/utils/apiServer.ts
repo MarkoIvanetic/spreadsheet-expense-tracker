@@ -1,7 +1,11 @@
 import { google, sheets_v4 } from "googleapis";
 import { JWT } from "google-auth-library";
 import trackerConfig from "../../tracker.config";
-import { CategoryData } from "@/types";
+import { BudgetData, CategoryData } from "@/types";
+
+export function parseCurrencyStringToNumber(value: string): number {
+  return parseFloat(value.replace(/[^0-9.-]+/g, ""));
+}
 
 export async function findFirstEmptyCellInColumn(
   spreadsheetId: string,
@@ -108,6 +112,78 @@ export async function getSheetIdByName(
   });
   const sheet = data.sheets.find((s: any) => s.properties.title === sheetName);
   return sheet.properties.sheetId;
+}
+
+export async function getBudgetData(
+  spreadsheetId: string
+): Promise<BudgetData | null> {
+  try {
+    const jwtClient: JWT = await getJwtClient();
+    const sheets: sheets_v4.Sheets = google.sheets("v4");
+
+    // Get the last sheet name
+    const lastSheetName = await getLastSheetName(
+      spreadsheetId,
+      jwtClient,
+      sheets
+    );
+
+    // Specify the ranges to fetch the values from specific cells
+    const budgetRange = `${lastSheetName}!K8:K9`;
+    const expenseRange = `${lastSheetName}!G19:G21`;
+
+    // Fetch budget data (K8:K9)
+    const budgetDataResponse = await sheets.spreadsheets.values.get({
+      auth: jwtClient,
+      spreadsheetId,
+      range: budgetRange,
+    });
+
+    if (!budgetDataResponse.data.values) {
+      console.error("No data found in the given budget range.");
+      return null;
+    }
+
+    // Fetch expense data (G20:G21)
+    const expenseDataResponse = await sheets.spreadsheets.values.get({
+      auth: jwtClient,
+      spreadsheetId,
+      range: expenseRange,
+    });
+
+    if (!expenseDataResponse.data.values) {
+      console.error("No data found in the given expense range.");
+      return null;
+    }
+
+    // Extracting values and formatting them properly as numbers
+    const necessitiesBudget = parseCurrencyStringToNumber(
+      budgetDataResponse.data.values[0][0]
+    ); // K8
+    const wantsBudget = parseCurrencyStringToNumber(
+      budgetDataResponse.data.values[1][0]
+    ); // K9
+    const totalExpenses = parseCurrencyStringToNumber(
+      expenseDataResponse.data.values[0][0]
+    ); // G10
+    const necessitiesExpense = parseCurrencyStringToNumber(
+      expenseDataResponse.data.values[1][0]
+    ); // G20
+    const wantsExpense = parseCurrencyStringToNumber(
+      expenseDataResponse.data.values[2][0]
+    ); // G21
+
+    return {
+      totalExpenses,
+      necessitiesBudget,
+      wantsBudget,
+      necessitiesExpense,
+      wantsExpense,
+    };
+  } catch (error: any) {
+    console.error("Error fetching budget data:", error.message);
+    return null;
+  }
 }
 
 // Helper function to fetch all rows from a sheet

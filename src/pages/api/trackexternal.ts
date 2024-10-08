@@ -5,7 +5,6 @@ import {
   formatDateTimeForSheets,
 } from "@/utils/apiServer";
 import { performManualCategoryMatching } from "@/utils/misc";
-import axios from "axios";
 import { NextApiRequest, NextApiResponse } from "next";
 
 interface NotificationData {

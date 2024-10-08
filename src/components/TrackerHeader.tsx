@@ -67,7 +67,7 @@ export const TrackerHeader: FC<ITrackerHeaderProps> = forwardRef(
     });
 
     return (
-      <Flex mb={5} gap={3} flexDir="row" w="min(100%, 800px)">
+      <Flex gap={3} flexDir="row" w="min(100%, 800px)">
         <VStack
           flexDir="column"
           w="100%"

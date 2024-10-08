@@ -9,6 +9,7 @@ import { Category } from "@/types";
 import { FC, useRef } from "react";
 import { TrackerHeader } from "./TrackerHeader";
 import { TrackerMenu, TrackerViewState } from "./TrackerMenu";
+import { BudgetBadgeStack } from "@/components/BudgetBadgeStack";
 
 interface ITrackerProps extends StackProps {
   isLoading: boolean;
@@ -43,6 +44,7 @@ export const Tracker: FC<ITrackerProps> = ({ onSave, isLoading, ...rest }) => {
       py="12px"
       px="12px"
       minW="400px"
+      spacing={4}
       {...rest}
     >
       <HStack justify="space-between" w="100%" p="10px 6px 20px 0px">
@@ -57,6 +59,7 @@ export const Tracker: FC<ITrackerProps> = ({ onSave, isLoading, ...rest }) => {
         isLoading={isLoading}
         ref={inputRef}
       />
+      <BudgetBadgeStack />
       <Flex
         direction={viewMode === TrackerViewState.Grid ? "row" : "column"}
         alignItems={viewMode === TrackerViewState.Grid ? "center" : "stretch"}
