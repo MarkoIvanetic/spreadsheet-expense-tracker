@@ -25,9 +25,10 @@ export const fetchCategoriesWithLocalStorage = async (): Promise<
   const localStorageKey = "api/data";
 
   // Check local storage first
-  const localData = localStorage.getItem(localStorageKey);
+  const localData = JSON.parse(localStorage.getItem(localStorageKey) || "[]");
+
   if (localData && localData.length > 0) {
-    return JSON.parse(localData) as Array<Category>;
+    return localData as Array<Category>;
   }
 
   // Fetch from API if not in local storage

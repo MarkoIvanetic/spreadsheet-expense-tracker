@@ -124,7 +124,11 @@ export async function getAllRows(
     range,
   });
   return data.values
-    ? data.values.map((row: number, index: number) => ({ id: index + 1, row }))
+    ? data.values.map((row: Array<string>, index: number) => {
+        let formattedRow: Array<string> = row;
+        formattedRow[1] = formattedRow[1].replace(/[^0-9.]/g, "");
+        return { id: index + 1, row: formattedRow };
+      })
     : [];
 }
 
