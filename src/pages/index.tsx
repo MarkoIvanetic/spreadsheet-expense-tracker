@@ -1,64 +1,17 @@
-import { Tracker } from "@/components/Tracker";
-import { Unverified } from "@/components/Unverified";
-import { Box, Divider, Flex } from "@chakra-ui/react";
+import { Box, Flex } from "@chakra-ui/react";
 import { NextPage } from "next";
 import Head from "next/head";
-import { useState } from "react";
 import { SWRConfig } from "swr";
 
-import { useStats } from "@/hooks/useStats";
+import { Layout } from "@/components/Layout/layout";
 import NoSSR from "@/utils/NoSSR";
-
 import trackerConfig from "../../tracker.config";
-import { Category } from "@/types";
 
 try {
   window.trackerConfig = trackerConfig;
 } catch (error) {}
 
-const fetcher = async (url: string, options: Record<any, any>) => {
-  const res = await fetch(url, options);
-  const data = await res.json();
-
-  if (res.status !== 200) {
-    throw new Error(data.message);
-  }
-  return data;
-};
-
 const Home: NextPage<{ fallback: Record<string, any> }> = ({ fallback }) => {
-  const [isLoading, setIsLoading] = useState(false);
-  const [reset, setReset] = useState(0);
-
-  const [stats, setStats] = useStats();
-
-  const saveExpense = async (
-    category: Category,
-    description: string,
-    expense: number
-  ) => {
-    setIsLoading(true);
-
-    await fetcher("api/track", {
-      method: "POST",
-      body: JSON.stringify({
-        category: category.name,
-        description: description || "",
-        date: new Date().toISOString(),
-        value: expense,
-      }),
-    });
-
-    setIsLoading(false);
-
-    setStats({
-      ...stats,
-      [category.id]: (stats[category.id] || 0) + 1,
-    });
-
-    setReset((x) => x + 1);
-  };
-
   return (
     <SWRConfig>
       <Head>
@@ -69,12 +22,10 @@ const Home: NextPage<{ fallback: Record<string, any> }> = ({ fallback }) => {
       </Head>
       <main>
         <NoSSR>
-          <Tracker key={reset} isLoading={isLoading} onSave={saveExpense} />
-             <Divider py={2}/>
-          <Unverified isLoading={isLoading} onSave={saveExpense} />
+          <Layout />
         </NoSSR>
         <Flex as="footer" mt="10vh" px="10px" py={4} justifyContent="center">
-          <Box w="min(100%, 800px)"></Box>
+          <Box w="min(100%, 800px)" />
         </Flex>
       </main>
     </SWRConfig>
@@ -82,22 +33,3 @@ const Home: NextPage<{ fallback: Record<string, any> }> = ({ fallback }) => {
 };
 
 export default Home;
-
-// export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
-//   res.setHeader(
-//     "Cache-Control",
-//     "private, s-maxage=3600, stale-while-revalidate=2400"
-//   );
-
-//   // ************************************
-//   const data = await getSheetData();
-//   // ************************************
-
-//   return {
-//     props: {
-//       fallback: {
-//         // "api/data": data,
-//       },
-//     },
-//   };
-// };

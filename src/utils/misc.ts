@@ -1,4 +1,5 @@
 import { getCategoriesLocal } from "@/hooks/useCategories";
+import { NotificationData } from "@/types";
 import { matchingData } from "@/utils/localData";
 import stringSimilarity from "string-similarity";
 
@@ -100,3 +101,22 @@ export const performManualCategoryMatching = (
   // If no match is found, return null or a default value
   return null;
 };
+
+export function extractPriceAndVendor(
+  notificationText: string
+): NotificationData | undefined {
+  const priceRegex = /(\d+(\.\d{1,2})?)/;
+  const vendorRegex = /at\s+(\w+)/;
+
+  const priceMatch = notificationText.match(priceRegex);
+  const vendorMatch = notificationText.match(vendorRegex);
+
+  if (priceMatch && vendorMatch) {
+    return {
+      price: priceMatch[0],
+      vendor: vendorMatch[1],
+    };
+  }
+
+  return undefined;
+}

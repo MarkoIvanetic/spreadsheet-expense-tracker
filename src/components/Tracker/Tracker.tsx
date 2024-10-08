@@ -1,7 +1,13 @@
-import { Box, Flex, HStack, Heading, StackProps, VStack } from "@chakra-ui/react";
+import {
+  Box,
+  Flex,
+  HStack,
+  Heading,
+  StackProps,
+  VStack,
+} from "@chakra-ui/react";
 
 import { useTrackerContext } from "@/TrackerContext";
-import { CategoryItem } from "@/components/CategoryItem";
 import { useCategories } from "@/hooks/useCategories";
 import { useLocalStorage } from "@/hooks/useLocalStorage";
 import { useStats } from "@/hooks/useStats";
@@ -9,7 +15,8 @@ import { Category } from "@/types";
 import { FC, useRef } from "react";
 import { TrackerHeader } from "./TrackerHeader";
 import { TrackerMenu, TrackerViewState } from "./TrackerMenu";
-import { BudgetBadgeStack } from "@/components/BudgetBadgeStack";
+import { BudgetBadgeStack } from "@/components/Budget/BudgetBadgeStack";
+import { TrackerCategoryItem } from "@/components/Tracker/TrackerCategoryItem";
 
 interface ITrackerProps extends StackProps {
   isLoading: boolean;
@@ -71,7 +78,7 @@ export const Tracker: FC<ITrackerProps> = ({ onSave, isLoading, ...rest }) => {
       >
         {categories?.sort(categorySortFunction)?.map((item: Category) => {
           return (
-            <CategoryItem
+            <TrackerCategoryItem
               onClick={() => {
                 setSelectedCategory(item);
                 setTimeout(() => {

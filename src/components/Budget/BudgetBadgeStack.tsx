@@ -1,22 +1,10 @@
 import React from "react";
 import { Stack, Badge, Skeleton } from "@chakra-ui/react";
 import { useBudgetData } from "@/hooks/useBudgetData";
+import { getBadgeColor } from "@/components/Budget/utilsBudget";
 
 export const BudgetBadgeStack = () => {
   const { data, isLoading, error } = useBudgetData();
-
-  const getBadgeColor = (expense: number, limit: number) => {
-    const percentage = (expense / limit) * 100;
-    if (percentage < 50) {
-      return "green";
-    } else if (percentage < 75) {
-      return "yellow";
-    } else if (percentage < 100) {
-      return "orange";
-    } else {
-      return "red";
-    }
-  };
 
   const necessitiesColor = data
     ? getBadgeColor(data.necessitiesExpense, data.necessitiesBudget)
@@ -34,8 +22,8 @@ export const BudgetBadgeStack = () => {
         <Skeleton p={2} height="34px" width="100px" />
       ) : (
         <Badge p={2} colorScheme={necessitiesColor}>
-          €{data!.necessitiesExpense.toFixed(2)} /{" "}
-          €{data!.necessitiesBudget.toFixed(2)}
+          €{data!.necessitiesExpense.toFixed(2)} / €
+          {data!.necessitiesBudget.toFixed(2)}
         </Badge>
       )}
       <Badge p={2} variant="outline" colorScheme={wantsColor}>

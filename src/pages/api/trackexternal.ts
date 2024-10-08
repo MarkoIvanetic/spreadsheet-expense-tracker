@@ -4,32 +4,11 @@ import {
   addUnverifiedExpense,
   formatDateTimeForSheets,
 } from "@/utils/apiServer";
-import { performManualCategoryMatching } from "@/utils/misc";
+import {
+  extractPriceAndVendor,
+  performManualCategoryMatching,
+} from "@/utils/misc";
 import { NextApiRequest, NextApiResponse } from "next";
-
-interface NotificationData {
-  price: string;
-  vendor: string;
-}
-
-function extractPriceAndVendor(
-  notificationText: string
-): NotificationData | undefined {
-  const priceRegex = /(\d+(\.\d{1,2})?)/;
-  const vendorRegex = /at\s+(\w+)/;
-
-  const priceMatch = notificationText.match(priceRegex);
-  const vendorMatch = notificationText.match(vendorRegex);
-
-  if (priceMatch && vendorMatch) {
-    return {
-      price: priceMatch[0],
-      vendor: vendorMatch[1],
-    };
-  }
-
-  return undefined;
-}
 
 export default async function handler(
   req: NextApiRequest,
@@ -50,31 +29,7 @@ export default async function handler(
 
     const { price, vendor } = variables;
 
-    console.log("vendor:", vendor);
-
-    // Get category from new API endpoint
     try {
-      // TODO: skip because its slow
-
-      // const response = await axios.post(
-      //   `${process.env.API_HOST}/api/detectCategory`,
-      //   {
-      //     vendor,
-      //   },
-      //   {
-      //     headers: {
-      //       "Content-Type": "application/json",
-      //     },
-      //     timeout: 30000, // Set timeout to 30 seconds
-      //   }
-      // );
-
-      // if (response.status !== 200) {
-      //   throw new Error("Failed to detect category");
-      // }
-
-      // const { category } = response.data;
-
       const category =
         performManualCategoryMatching(vendor, price) || "❓No idea";
 

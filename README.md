@@ -1,11 +1,12 @@
-## Spreadsheet expense tracker
+# Spreadsheet Expense Tracker
 
-This app uses google spreadsheet as a database for tracking expanses.
-See the full backend setup here: [How to Use Google Sheets As a Database For Your Business](https://blog.coupler.io/how-to-use-google-sheets-as-database/#Use_Google_Sheets_as_a_database_for_a_website)
+This app uses Google Spreadsheet as a database for tracking expenses. To set everything up, you need to follow the steps outlined here to properly connect your spreadsheet to the app.
 
+## Full Backend Setup
+
+For a more detailed backend setup guide, see: [How to Use Google Sheets As a Database For Your Business](https://blog.coupler.io/how-to-use-google-sheets-as-database/#Use_Google_Sheets_as_a_database_for_a_website).
 
 ![image](https://github.com/user-attachments/assets/987201f7-0100-4956-a8ff-17922dbe5408)
-
 
 ## Getting Started
 
@@ -29,39 +30,71 @@ pnpm dev
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-### Setup spreadsheet
+## Setup Spreadsheet
 
-#### Organising your spreadsheet
+To make sure your Google Sheets are accessible by the program, follow these steps:
 
-1. Your google sheet should have a sheet called "Data" where all your expense categories are listed in column A. You can add background color of category in column B. Make this your first sheet.
+### Organize Your Spreadsheet
 
-<img width="306" alt="image" src="https://github.com/MarkoIvanetic/spreadsheet-expense-tracker/assets/9166755/42cb4381-c0e0-43a5-aeb9-49b5cd4d6599">
+1. **Create a "Data" Sheet**:
 
+   - Your Google Sheet should have a sheet called "Data" where all your expense categories are listed in column A.
+   - You can add background colors for each category in column B. This sheet should be your first sheet in the Google Sheets document.
 
-2. You will need to manually add sheets for every (new) months. App will record the expenses into the last sheet. By default, the app will enter the expanse into range `A:C` with category/value/description data.
+   ![image](https://github.com/MarkoIvanetic/spreadsheet-expense-tracker/assets/9166755/42cb4381-c0e0-43a5-aeb9-49b5cd4d6599)
 
-You can change this behaviour by altering `sheetRange` variable in `src/pages/api/track.ts`.
+2. **Create Monthly Sheets**:
+   - You need to manually add sheets for each month. The app will record expenses into the last sheet (i.e., the most recent one).
+   - By default, the app will enter expense data into columns A, B, and C with the following data: category, value, and description.
+   - If you need to change this behavior, modify the `sheetRange` variable in `src/pages/api/track.ts`.
 
-#### Authentication
+### Authentication with Google Sheets API
 
-Follow the steps described in [How to Use Google Sheets As a Database For Your Business#Auth](https://blog.coupler.io/how-to-use-google-sheets-as-database/#Use_Google_Sheets_as_a_database_for_a_website:~:text=and%20write%20data.-,Authenticating%20with%20Google%20Sheets%20API,-In%20order%20to)
+To allow your app to access the Google Sheets API, follow these authentication steps:
 
-- Google API service should create a **service account email**. Share the spreadsheet with this email!
-- following the step further you will create Service Key. The dashboard will download `client_secret.json`
-- only thing you need from here is `client_email` and `private_key`
+1. **Create a Google Cloud Project and Service Account**:
 
-  Make an `.env` file in the project root:
+   - Go to the [Google Cloud Console](https://console.cloud.google.com/).
+   - Create a new project by clicking on the project dropdown at the top and selecting **New Project**.
+   - After creating the project, navigate to **APIs & Services** > **Dashboard**.
+   - Click on **Enable APIs and Services** and search for "Google Sheets API". Enable this API for your project.
+   - Now, go to **APIs & Services** > **Credentials**.
+   - Click on **Create Credentials** and select **Service Account**.
+   - Fill in the required details for the service account (e.g., name, description). You can leave the roles section as is.
+   - Once the service account is created, click on it in the credentials list, and then go to the **Keys** tab.
+   - Click on **Add Key** > **Create New Key** and select **JSON**. This will download a JSON file containing the credentials you need.
+   - The JSON file will contain the `client_email` and `private_key` needed for authentication.
 
-```
-CLIENT_EMAIL=*************@test-api-project-**************************.com
-PRIVATE_KEY="-----BEGIN PRIVATE KEY-----\nMII...Ggg=\n-----END PRIVATE KEY-----\n"
-SPREADSHEET_ID="1m4qUwDiD*****************b9SWogQ0_QWyVssyw0"
-```
+2. **Share Spreadsheet**:
 
-You can easily get spreadsheet Id from the Google sheets URL:
+   - Share your Google Spreadsheet with the **service account email**. This allows the app to access and edit the spreadsheet.
 
-<img width="943" alt="image" src="https://github.com/MarkoIvanetic/spreadsheet-expense-tracker/assets/9166755/4f3bec15-228b-47fe-bb78-dba124d7467b">
+3. **Generate Service Account Key**:
 
-#### Hosting
+   - The JSON file (`client_secret.json`) you downloaded contains the key details. You only need the `client_email` and `private_key` from this file.
 
-TBA, but I'm using [Netlify](https://www.netlify.com/?attr=homepage-modal) - it's free.
+4. **Configure Environment Variables**:
+
+   - In the project root, create a `.env` file with the following values:
+
+   ```
+   CLIENT_EMAIL=*************@test-api-project-**************************.com
+   PRIVATE_KEY="-----BEGIN PRIVATE KEY-----\nMII...Ggg=\n-----END PRIVATE KEY-----\n"
+   SPREADSHEET_ID="1m4qUwDiD*****************b9SWogQ0_QWyVssyw0"
+   ```
+
+   - The `SPREADSHEET_ID` can be found in the Google Sheets URL:
+
+   ![image](https://github.com/MarkoIvanetic/spreadsheet-expense-tracker/assets/9166755/4f3bec15-228b-47fe-bb78-dba124d7467b)
+
+5. **Google Sheets API Permissions**:
+   - Make sure that your Google Cloud Project has the **Google Sheets API** enabled.
+   - You can enable the API by navigating to the [Google Cloud Console](https://console.cloud.google.com/), finding your project, and enabling the Google Sheets API.
+
+### Hosting
+
+You can host the application on platforms like [Netlify](https://www.netlify.com/?attr=homepage-modal), which is free to use. Further hosting instructions will be provided later.
+
+---
+
+By following these steps, you will be able to set up the necessary authentication and permissions for your Google Spreadsheet to be accessible by the app, enabling full integration for your expense tracking application.

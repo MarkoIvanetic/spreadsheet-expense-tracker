@@ -9,7 +9,6 @@ import {
   forwardRef,
   useToast,
 } from "@chakra-ui/react";
-
 import { useTrackerContext } from "@/TrackerContext";
 import { Category } from "@/types";
 import { deleteUnverifiedData } from "@/utils/apiLocal";
@@ -26,13 +25,10 @@ interface ITrackerHeaderProps extends StackProps {
 
 export const TrackerHeader: FC<ITrackerHeaderProps> = forwardRef(
   ({ selectedCategory, isLoading, onSave }, ref) => {
-    const borderColor = Boolean(selectedCategory)
-      ? selectedCategory?.color || "blue.200"
-      : "red.200";
-
+    // Context values
     const {
       inputValue,
-      setInputValue: setInputValue,
+      setInputValue,
       description,
       setDescription,
       setSelectedUnverifiedExpenseId,
@@ -40,10 +36,15 @@ export const TrackerHeader: FC<ITrackerHeaderProps> = forwardRef(
       resetInputs,
     } = useTrackerContext();
 
+    // Query Client and Toast hooks
     const queryClient = useQueryClient();
-
     const toast = useToast();
 
+    // Border color based on selected category
+    const borderColor =
+      selectedCategory?.color || (selectedCategory ? "blue.200" : "red.200");
+
+    // Mutation for deleting unverified data
     const mutation = useMutation({
       mutationFn: deleteUnverifiedData,
       onSuccess: () => {
@@ -52,7 +53,6 @@ export const TrackerHeader: FC<ITrackerHeaderProps> = forwardRef(
       },
       onError: (error) => {
         console.error("Error deleting data:", error);
-
         toast({
           title: "Error deleting data",
           description: "An error occurred while deleting data",
@@ -66,6 +66,19 @@ export const TrackerHeader: FC<ITrackerHeaderProps> = forwardRef(
       },
     });
 
+    // Handle save button click
+    const handleSaveClick = () => {
+      if (!selectedCategory?.name || !inputValue) return;
+
+      onSave(selectedCategory, description || "", inputValue);
+
+      if (selectedUnverifiedId) {
+        mutation.mutate(selectedUnverifiedId);
+      }
+
+      resetInputs();
+    };
+
     return (
       <Flex gap={3} flexDir="row" w="min(100%, 800px)">
         <VStack
@@ -74,6 +87,7 @@ export const TrackerHeader: FC<ITrackerHeaderProps> = forwardRef(
           justifyContent="flex-start"
           spacing={4}
         >
+          {/* Expense Input Field */}
           <InputGroup
             borderRadius="10px"
             borderWidth="2px"
@@ -91,17 +105,18 @@ export const TrackerHeader: FC<ITrackerHeaderProps> = forwardRef(
             <Input
               w="100%"
               id="expense-input"
-              _focusVisible={{
-                borderColor: borderColor,
-              }}
+              _focusVisible={{ borderColor: borderColor }}
               ref={ref}
               value={inputValue}
               p="10px 4.5rem 10px 40px"
               type="number"
               placeholder="Enter expense"
               onChange={(e) => setInputValue(+e.target.value)}
+              onFocus={(event) => event.target.select()}
             />
           </InputGroup>
+
+          {/* Description Input Field */}
           <InputGroup
             borderRadius="10px"
             borderWidth="2px"
@@ -114,9 +129,7 @@ export const TrackerHeader: FC<ITrackerHeaderProps> = forwardRef(
             </InputLeftElement>
             <Input
               w="100%"
-              _focusVisible={{
-                borderColor: borderColor,
-              }}
+              _focusVisible={{ borderColor: borderColor }}
               value={description}
               p="10px 4.5rem 10px 40px"
               type="text"
@@ -125,23 +138,15 @@ export const TrackerHeader: FC<ITrackerHeaderProps> = forwardRef(
             />
           </InputGroup>
         </VStack>
+
+        {/* Save Button */}
         <Button
           w="200px"
           height="auto"
           bg={borderColor}
           isDisabled={!selectedCategory?.name || !inputValue}
           isLoading={isLoading}
-          onClick={() => {
-            if (!selectedCategory?.name || !inputValue) return;
-
-            onSave(selectedCategory, description || "", inputValue);
-
-            if (selectedUnverifiedId) {
-              mutation.mutate(selectedUnverifiedId);
-            }
-
-            resetInputs();
-          }}
+          onClick={handleSaveClick}
         >
           Add record
         </Button>

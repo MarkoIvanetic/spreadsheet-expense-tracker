@@ -8,13 +8,13 @@ import {
 } from "@chakra-ui/react";
 import { FC } from "react";
 
-interface CategoryItemProps extends ButtonProps {
+interface TrackerCategoryItemProps extends ButtonProps {
   category: Category;
   isSelected?: boolean;
   color?: string;
 }
 
-export const CategoryItem: FC<CategoryItemProps> = ({
+export const TrackerCategoryItem: FC<TrackerCategoryItemProps> = ({
   category,
   color,
   isSelected,
