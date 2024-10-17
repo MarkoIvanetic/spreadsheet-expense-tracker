@@ -82,11 +82,8 @@ export const performManualCategoryMatching = (
 
   // Iterate through the matchingData array
   for (const data of matchingData) {
-    // Merge the 'includes' array into a space-separated string and convert to lowercase
-    const mergedIncludes = data.includes.join(" ").toLowerCase();
-
     // Check if the expense description is part of the mergedIncludes
-    if (mergedIncludes.includes(lowerCaseDescription)) {
+    if (data.includes.includes(lowerCaseDescription)) {
       // Check if 'priceBelow' exists and if it matches the price condition
       if (data.priceBelow !== undefined) {
         if (numericPrice < data.priceBelow) {
