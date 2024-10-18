@@ -6,7 +6,8 @@ This app uses Google Spreadsheet as a database for tracking expenses. To set eve
 
 For a more detailed backend setup guide, see: [How to Use Google Sheets As a Database For Your Business](https://blog.coupler.io/how-to-use-google-sheets-as-database/#Use_Google_Sheets_as_a_database_for_a_website).
 
-![image](https://github.com/user-attachments/assets/987201f7-0100-4956-a8ff-17922dbe5408)
+<img width="820" alt="image" src="https://github.com/user-attachments/assets/f1de443d-7240-49b1-8928-58be73ae306d">
+
 
 ## Getting Started
 
@@ -36,17 +37,22 @@ To make sure your Google Sheets are accessible by the program, follow these step
 
 ### Organize Your Spreadsheet
 
+[Example spreadsheet](https://docs.google.com/spreadsheets/d/1o8PrpO-ye_H_Cdfe0HDQAf3VfY1kKZSm4uWx4ODNTeg/edit?usp=sharing)
+
 1. **Create a "Data" Sheet**:
 
    - Your Google Sheet should have a sheet called "Data" where all your expense categories are listed in column A.
    - You can add background colors for each category in column B. This sheet should be your first sheet in the Google Sheets document.
 
-   ![image](https://github.com/MarkoIvanetic/spreadsheet-expense-tracker/assets/9166755/42cb4381-c0e0-43a5-aeb9-49b5cd4d6599)
+   <img width="260" alt="image" src="https://github.com/user-attachments/assets/f520b69c-698a-40c9-af56-cfa20ab6af26">
 
 2. **Create Monthly Sheets**:
    - You need to manually add sheets for each month. The app will record expenses into the last sheet (i.e., the most recent one).
    - By default, the app will enter expense data into columns A, B, and C with the following data: category, value, and description.
    - If you need to change this behavior, modify the `sheetRange` variable in `src/pages/api/track.ts`.
+  
+<img width="716" alt="image" src="https://github.com/user-attachments/assets/89355626-d996-41ae-8130-f8a13de1f234">
+
 
 ### Authentication with Google Sheets API
 
