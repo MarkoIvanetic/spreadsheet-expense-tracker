@@ -23,23 +23,14 @@ const BudgetBadge: FC<BudgetBadgeProps> = ({
   label,
   value,
 }) => {
-  // Responsive font size with max size of 16px
-  const responsiveFontSize = useBreakpointValue({
-    base: "8px",
-    sm: "12px",
-    md: "14px",
-  });
-
   if (isLoading) {
     return <Skeleton p={2} height="34px" width="100px" />;
   }
 
   return (
     <Badge p={2} colorScheme={colorScheme}>
-      <Text color="white">
-        {label}:
-      </Text>
-      <span style={{ fontSize: responsiveFontSize }}>{value}</span>
+      <Text color="white">{label}:</Text>
+      <span style={{ fontSize: "14px" }}>{value}</span>
     </Badge>
   );
 };

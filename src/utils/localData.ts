@@ -28,19 +28,28 @@ export interface MatchingData {
 
 export const matchingData: Array<MatchingData> = [
   {
-    includes: ["WoltEUR", "Mlinar", "Pekara", "Burger"],
+    includes: ["WoltEUR", "Mlinar", "Pekara", "Burger", "McDonald", "Wolt"],
     category: categoriesLocal.food,
   },
   {
-    includes: ["Tedi"],
+    includes: ["Tedi", "TediEUR", "TemuEUR", "MenartEUR", "Bambu"],
     category: categoriesLocal.hobby,
   },
   {
-    includes: ["INTERSPAR", "Konzum", "Lidl", "Kaufland"],
+    includes: [
+      "INTERSPAR",
+      "Konzum",
+      "Lidl",
+      "Kaufland",
+      "SPAR",
+      "Tvornica",
+      "SamopostrezbaEUR",
+      "Supernova",
+    ],
     category: categoriesLocal.groceries,
   },
   {
-    includes: ["INTERSPORT", "House"],
+    includes: ["House", "About You", "HouseEUR"],
     category: categoriesLocal.clothing,
   },
   {
@@ -49,15 +58,15 @@ export const matchingData: Array<MatchingData> = [
     category: categoriesLocal.tobacco,
   },
   {
-    includes: ["Tisak"],
+    includes: ["Tisak", "TisakEUR"],
     category: categoriesLocal.tobacco,
   },
   {
-    includes: ["PetrolEUR", "INAEUR", "Tifon"],
+    includes: ["PetrolEUR", "INAEUR", "Tifon", "LUKOILEUR"],
     category: categoriesLocal.car_gas,
   },
   {
-    includes: ["TemuEUR"],
-    category: categoriesLocal.hobby,
+    includes: ["GoogleEUR"],
+    category: categoriesLocal.mortgage_bills,
   },
 ];
