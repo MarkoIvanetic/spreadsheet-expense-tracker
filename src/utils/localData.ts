@@ -54,7 +54,6 @@ export const matchingData: Array<MatchingData> = [
   },
   {
     includes: ["PetrolEUR", "INAEUR", "Tifon"],
-    priceBelow: 15,
     category: categoriesLocal.tobacco,
   },
   {
@@ -70,3 +69,13 @@ export const matchingData: Array<MatchingData> = [
     category: categoriesLocal.mortgage_bills,
   },
 ];
+
+export const matchingDataFlat = matchingData.reduce((acc, iter) => {
+  const result: Record<string, string> = {};
+
+  iter.includes.forEach((cat: string) => {
+    result[cat] = iter.category;
+  });
+
+  return { ...acc, ...result };
+}, {}) as Record<string, string>;

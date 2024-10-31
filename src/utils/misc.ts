@@ -73,29 +73,20 @@ export const findBestCategoryMatchByName = (categoryName: string) => {
 
 export const performManualCategoryMatching = (
   expenseDescription: string,
-  price: string
+  price?: string
 ) => {
-  // Convert the expense description to lowercase
   const lowerCaseDescription = expenseDescription.toLowerCase();
-  // Convert the price from string to number
-  const numericPrice = parseFloat(price);
 
-  // Iterate through the matchingData array
   for (const data of matchingData) {
-    // Check if the expense description is part of the mergedIncludes
-    if (data.includes.includes(lowerCaseDescription)) {
-      // Check if 'priceBelow' exists and if it matches the price condition
-      if (data.priceBelow !== undefined) {
-        if (numericPrice < data.priceBelow) {
-          return data.category; // Return the matching category when price condition is satisfied
-        }
-      } else {
-        return data.category; // Return the matching category if no price condition
-      }
+    const isMatch = data.includes.some((cat) => {
+      return cat.includes(lowerCaseDescription);
+    });
+
+    if (isMatch) {
+      return data.category;
     }
   }
 
-  // If no match is found, return null or a default value
   return null;
 };
 
