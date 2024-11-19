@@ -79,7 +79,7 @@ export const performManualCategoryMatching = (
 
   for (const data of matchingData) {
     const isMatch = data.includes.some((cat) => {
-      return cat.includes(lowerCaseDescription);
+      return cat.toLowerCase().includes(lowerCaseDescription);
     });
 
     if (isMatch) {
