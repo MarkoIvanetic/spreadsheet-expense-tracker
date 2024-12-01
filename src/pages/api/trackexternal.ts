@@ -33,6 +33,8 @@ export default async function handler(
       const category =
         performManualCategoryMatching(vendor, price) || "❓No idea";
 
+      console.log("Category matched:", category);
+
       const values = [
         [
           category,

@@ -22,7 +22,7 @@ export const TrackerProvider: React.FC<{ children: ReactNode }> = ({
   const removeUnverifiedExpense = (id: number) => {
     fetch("api/unverified", {
       method: "DELETE",
-      body: JSON.stringify({ rowIndex: id }),
+      body: JSON.stringify({ rowIndices: [id] }),
     });
   };
 

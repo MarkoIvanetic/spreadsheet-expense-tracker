@@ -79,7 +79,7 @@ export const performManualCategoryMatching = (
 
   for (const data of matchingData) {
     const isMatch = data.includes.some((cat) => {
-      return cat.includes(lowerCaseDescription);
+      return cat.toLowerCase().includes(lowerCaseDescription);
     });
 
     if (isMatch) {
@@ -108,3 +108,7 @@ export function extractPriceAndVendor(
 
   return undefined;
 }
+
+export const wait = (n: number = 300): Promise<void> => {
+  return new Promise((resolve) => setTimeout(resolve, n));
+};

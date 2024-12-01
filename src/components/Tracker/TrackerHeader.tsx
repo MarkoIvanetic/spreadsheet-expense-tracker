@@ -15,6 +15,7 @@ import { deleteUnverifiedData } from "@/utils/apiLocal";
 import { getFirstEmoji } from "@/utils/misc";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { FC, MutableRefObject } from "react";
+import { LoadingButton } from "@/components/core/LoadingButton";
 
 interface ITrackerHeaderProps extends StackProps {
   isLoading: boolean;
@@ -140,16 +141,17 @@ export const TrackerHeader: FC<ITrackerHeaderProps> = forwardRef(
         </VStack>
 
         {/* Save Button */}
-        <Button
+        <LoadingButton
           w="200px"
           height="auto"
           bg={borderColor}
           isDisabled={!selectedCategory?.name || !inputValue}
           isLoading={isLoading}
           onClick={handleSaveClick}
-        >
-          Add record
-        </Button>
+          text="Add record"
+          loadingText="Adding..."
+          fontSize="1.25rem"
+        ></LoadingButton>
       </Flex>
     );
   }
