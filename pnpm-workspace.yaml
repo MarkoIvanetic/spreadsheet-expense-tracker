@@ -1,0 +1,6 @@
+packages:
+  - src/** # Includes all subfolders and files under 'src'
+  - hooks # Includes any standalone 'hooks' folder
+  - icons # Includes any standalone 'icons' folder
+  - styles # Includes any standalone 'styles' folder
+  - utils # Includes any standalone 'utils' folder
