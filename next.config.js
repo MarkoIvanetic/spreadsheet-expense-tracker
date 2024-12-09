@@ -11,19 +11,6 @@ const withPWA = require("next-pwa")({
   cacheStartUrl: true, // Cache the start URL
   runtimeCaching: [
     {
-      // Cache API responses
-      urlPattern: /^https:\/\/api\.example\.com\/.*$/,
-      method: "GET",
-      handler: "NetworkFirst",
-      options: {
-        cacheName: "api-cache",
-        expiration: {
-          maxEntries: 10, // Cache up to 50 API responses
-          maxAgeSeconds: 30 * 60, // Cache for 0.5 hour
-        },
-      },
-    },
-    {
       // Cache static assets like images
       urlPattern: /\.(?:png|jpg|jpeg|svg|gif|webp)$/,
       handler: "CacheFirst",
