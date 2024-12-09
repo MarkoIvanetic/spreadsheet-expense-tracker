@@ -49,8 +49,12 @@ export const matchingData: Array<MatchingData> = [
     category: categoriesLocal.groceries,
   },
   {
-    includes: ["House", "About You", "HouseEUR"],
+    includes: ["House", "About You", "Peek", "HouseEUR"],
     category: categoriesLocal.clothing,
+  },
+  {
+    includes: ["Laka"],
+    category: categoriesLocal.drinks_outings,
   },
   {
     includes: ["PetrolEUR", "INAEUR", "Tifon"],
@@ -61,11 +65,11 @@ export const matchingData: Array<MatchingData> = [
     category: categoriesLocal.tobacco,
   },
   {
-    includes: ["PetrolEUR", "INAEUR", "Tifon", "LUKOILEUR"],
+    includes: ["PetrolEUR", "INAEUR", "Tifon", "LUKOILEUR", "BoltEUR"],
     category: categoriesLocal.car_gas,
   },
   {
-    includes: ["GoogleEUR"],
+    includes: ["GoogleEUR", "PevexEUR", "Bauhaus"],
     category: categoriesLocal.mortgage_bills,
   },
 ];

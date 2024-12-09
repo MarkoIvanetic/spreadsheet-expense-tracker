@@ -65,6 +65,8 @@ export const performManualCategoryMatching = (
   expenseDescription: string,
   price?: string
 ) => {
+  console.log("matching...");
+
   const lowerCaseDescription = expenseDescription.toLowerCase();
 
   for (const data of matchingData) {
