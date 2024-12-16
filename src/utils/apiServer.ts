@@ -22,7 +22,7 @@ export async function findFirstEmptyCellInColumn(
   if (!getData.values || getData.values.length === 0) {
     return 1;
   }
-
+  console.log("getData.values:", getData.values);
   return getData.values.length + 1;
 }
 
@@ -182,7 +182,7 @@ export async function getAllRows(
   sheets: any,
   sheetName: string
 ) {
-  const range = `${sheetName}!A:D`;
+  const range = `${sheetName}!${config.ALL_ROWS_RANGE_SUFFIX}`;
   const { data } = await sheets.spreadsheets.values.get({
     auth: jwtClient,
     spreadsheetId,
@@ -254,11 +254,13 @@ export async function updateSheet(
     spreadsheetId,
     jwtClient,
     sheets,
-    `${lastSheetName}!A:A`
+    // FRANKA: R:R
+    `${lastSheetName}!T:T`
   );
   console.log("📈 First Empty Row Index:", firstEmptyRowIndex);
 
-  const sheetRange = `${lastSheetName}!A${firstEmptyRowIndex}:D${firstEmptyRowIndex}`;
+  const sheetRange = `${lastSheetName}!R${firstEmptyRowIndex}:Y${firstEmptyRowIndex}`;
+  // const sheetRange = `${lastSheetName}!A${firstEmptyRowIndex}:D${firstEmptyRowIndex}`;
   console.log("📌 Sheet Range:", sheetRange);
 
   const { data } = await sheets.spreadsheets.values.update({
@@ -334,5 +336,7 @@ export function formatDateTimeForSheets(date: Date): string {
   const minutes = String(date.getMinutes()).padStart(2, "0");
   const seconds = String(date.getSeconds()).padStart(2, "0");
 
-  return `${day}/${month}/${year} ${hours}:${minutes}:${seconds}`;
+  // 17/12/2024
+  return `${day}/${month}/${year}`;
+  // return `${day}/${month}/${year} ${hours}:${minutes}:${seconds}`;
 }

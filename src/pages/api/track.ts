@@ -28,7 +28,7 @@ export default async function handler(
       sheets,
       [
         // FRANKA: [formattedDate, value, category, "", "", description],
-        [formattedDate, value, category, "", "", description],
+        [formattedDate, value, category, "", "", "", "", description],
       ],
       // FRANKA: config.ACTIVE_SHEET_NAME. others skip param
       config.ACTIVE_SHEET_NAME

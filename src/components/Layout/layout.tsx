@@ -12,7 +12,7 @@ export const Layout = () => {
     <>
       <Tracker key={reset} isLoading={isLoading} onSave={saveExpense} />
       <Divider py={2} />
-      <Unverified isLoading={isLoading} onSave={saveExpense} />
+      {/* <Unverified isLoading={isLoading} onSave={saveExpense} /> */}
     </>
   );
 };
