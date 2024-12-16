@@ -5,11 +5,7 @@ import { SWRConfig } from "swr";
 
 import { Layout } from "@/components/Layout/layout";
 import NoSSR from "@/utils/NoSSR";
-import trackerConfig from "../../tracker.config";
 
-try {
-  window.trackerConfig = trackerConfig;
-} catch (error) {}
 
 const Home: NextPage<{ fallback: Record<string, any> }> = ({ fallback }) => {
   return (
