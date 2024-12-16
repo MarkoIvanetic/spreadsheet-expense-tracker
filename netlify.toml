@@ -1,0 +1,13 @@
+[build]
+  # Command to build the standalone output
+  command = "npm run build"
+
+  # Publish directory points to the standalone folder
+  publish = ".next"
+
+  # Functions directory for Netlify serverless functions (used for SSR and API routes)
+  functions = "netlify/functions"
+
+[[plugins]]
+  # Include the Netlify Next.js plugin to optimize caching and support Next.js features
+  package = "@netlify/plugin-nextjs"

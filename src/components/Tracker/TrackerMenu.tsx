@@ -12,6 +12,7 @@ import {
   MenuList,
   useColorMode,
 } from "@chakra-ui/react";
+import { FC } from "react";
 
 // create an enum value called TrackerViewState containing values for grid view mode: Grid or List
 export enum TrackerViewState {
@@ -19,7 +20,9 @@ export enum TrackerViewState {
   List = 2,
 }
 
-export const TrackerMenu = () => {
+export const TrackerMenu: FC<{ onTestModalOpen: () => void }> = ({
+  onTestModalOpen,
+}) => {
   const { toggleColorMode } = useColorMode();
   const [_stats, setStats] = useStats();
   const [viewMode, setViewMode] = useLocalStorage("et-view", 1);
@@ -50,9 +53,9 @@ export const TrackerMenu = () => {
       <MenuButton
         as={IconButton}
         border="2px solid white"
-        bg={selectedCategory ? selectedCategory.color : "red.200" }
+        bg={selectedCategory ? selectedCategory.color : "red.200"}
         aria-label="Options"
-        icon={<MenuIcon color="white"/>}
+        icon={<MenuIcon color="white" />}
         variant="outline"
         size="sm"
       />
@@ -66,6 +69,14 @@ export const TrackerMenu = () => {
         </MenuItem>
         <MenuItem justifyContent="flex-start" as={Button} onClick={toggleGrid}>
           Switch to {viewMode === TrackerViewState.Grid ? "List" : "Grid"} view
+        </MenuItem>
+        <MenuItem
+          justifyContent="flex-start"
+          as={Button}
+          colorScheme="red"
+          onClick={onTestModalOpen}
+        >
+          Test category detection
         </MenuItem>
         <MenuItem
           justifyContent="flex-start"

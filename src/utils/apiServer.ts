@@ -2,6 +2,7 @@ import { google, sheets_v4 } from "googleapis";
 import { JWT } from "google-auth-library";
 import trackerConfig from "../../tracker.config";
 import { BudgetData, CategoryData } from "@/types";
+import { config } from "@/app.config";
 
 export function parseCurrencyStringToNumber(value: string): number {
   return parseFloat(value.replace(/[^0-9.-]+/g, ""));
@@ -71,7 +72,7 @@ export async function getCategoryData(
   const { data: getData } = await sheets.spreadsheets.values.get({
     auth: jwtClient,
     spreadsheetId,
-    range: "Data!A:C",
+    range: config.CATEGORY_DATA_RANGE,
   });
 
   if (!getData.values) return null;
@@ -129,8 +130,8 @@ export async function getBudgetData(
     );
 
     // Specify the ranges to fetch the values from specific cells
-    const budgetRange = `${lastSheetName}!K8:K9`;
-    const expenseRange = `${lastSheetName}!G19:G21`;
+    const budgetRange = `${lastSheetName}!${config.BUDGET_RANGE_SUFFIX}`;
+    const expenseRange = `${lastSheetName}!${config.EXPENSE_RANGE_SUFFIX}`;
 
     // Fetch budget data (K8:K9)
     const budgetDataResponse = await sheets.spreadsheets.values.get({

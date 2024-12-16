@@ -5,6 +5,7 @@ import {
   Heading,
   StackProps,
   VStack,
+  useDisclosure,
 } from "@chakra-ui/react";
 
 import { useTrackerContext } from "@/TrackerContext";
@@ -17,6 +18,7 @@ import { TrackerHeader } from "./TrackerHeader";
 import { TrackerMenu, TrackerViewState } from "./TrackerMenu";
 import { BudgetBadgeStack } from "@/components/Budget/BudgetBadgeStack";
 import { TrackerCategoryItem } from "@/components/Tracker/TrackerCategoryItem";
+import CategoryDetectionTestModal from "@/components/Unverified/CategoryDetectionTestModal";
 
 interface ITrackerProps extends StackProps {
   isLoading: boolean;
@@ -24,9 +26,11 @@ interface ITrackerProps extends StackProps {
 }
 
 export const Tracker: FC<ITrackerProps> = ({ onSave, isLoading, ...rest }) => {
-  const inputRef = useRef<HTMLInputElement | undefined>();
+  const inputRef = useRef<HTMLInputElement | undefined>(undefined);
 
   const { data: categories, isLoading: isLoadingCategories } = useCategories();
+
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   const [stats] = useStats();
 
@@ -57,7 +61,8 @@ export const Tracker: FC<ITrackerProps> = ({ onSave, isLoading, ...rest }) => {
       <HStack justify="space-between" w="100%" p="10px 6px 20px 0px">
         <Heading as="h1">GS Expense Tracker</Heading>
         <Box w="24px">
-          <TrackerMenu />
+          <CategoryDetectionTestModal isOpen={isOpen} onClose={onClose} />
+          <TrackerMenu onTestModalOpen={onOpen} />
         </Box>
       </HStack>
       <TrackerHeader
