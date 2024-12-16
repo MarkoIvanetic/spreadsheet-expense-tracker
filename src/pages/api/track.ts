@@ -7,6 +7,7 @@ import {
   updateSheet,
 } from "@/utils/apiServer";
 import { google } from "googleapis";
+import { config } from "@/app.config";
 
 export default async function handler(
   req: NextApiRequest,
@@ -21,9 +22,17 @@ export default async function handler(
 
     const formattedDate = formatDateTimeForSheets(new Date(date));
 
-    const data = await updateSheet(spreadsheetId, jwtClient, sheets, [
-      [category, value, description, formattedDate],
-    ]);
+    const data = await updateSheet(
+      spreadsheetId,
+      jwtClient,
+      sheets,
+      [
+        // FRANKA: [formattedDate, value, category, "", "", description],
+        [formattedDate, value, category, "", "", description],
+      ],
+      // FRANKA: config.ACTIVE_SHEET_NAME. others skip param
+      config.ACTIVE_SHEET_NAME
+    );
 
     return res.send({ status: 200, message: data });
   } else {

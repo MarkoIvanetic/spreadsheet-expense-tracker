@@ -16,7 +16,7 @@ import { Category } from "@/types";
 import { FC, useRef } from "react";
 import { TrackerHeader } from "./TrackerHeader";
 import { TrackerMenu, TrackerViewState } from "./TrackerMenu";
-import { BudgetBadgeStack } from "@/components/Budget/BudgetBadgeStack";
+// import { BudgetBadgeStack } from "@/components/Budget/BudgetBadgeStack";
 import { TrackerCategoryItem } from "@/components/Tracker/TrackerCategoryItem";
 import CategoryDetectionTestModal from "@/components/Unverified/CategoryDetectionTestModal";
 
@@ -71,7 +71,8 @@ export const Tracker: FC<ITrackerProps> = ({ onSave, isLoading, ...rest }) => {
         isLoading={isLoading}
         ref={inputRef}
       />
-      <BudgetBadgeStack />
+      {/* FRANKA: Hidden budget */}
+      {/* <BudgetBadgeStack /> */}
       <Flex
         direction={viewMode === TrackerViewState.Grid ? "row" : "column"}
         alignItems={viewMode === TrackerViewState.Grid ? "center" : "stretch"}

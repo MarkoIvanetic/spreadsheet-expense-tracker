@@ -1,4 +1,4 @@
-import { NextApiRequest, NextApiResponse } from "next";
+import { config } from "@/app.config";
 import {
   deleteRow,
   getAllRows,
@@ -6,7 +6,7 @@ import {
   updateSheet,
 } from "@/utils/apiServer";
 import { google } from "googleapis";
-import trackerConfig from "../../../tracker.config";
+import { NextApiRequest, NextApiResponse } from "next";
 
 interface RequestContext {
   req: NextApiRequest;
@@ -119,7 +119,7 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const sheetName = trackerConfig.unverifiedSheetName;
+  const sheetName = config.UNVERIFIED_SHEET_NAME;
   let jwtClient;
   try {
     jwtClient = await getJwtClient();

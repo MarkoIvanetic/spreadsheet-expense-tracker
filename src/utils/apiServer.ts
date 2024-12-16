@@ -1,8 +1,7 @@
-import { google, sheets_v4 } from "googleapis";
-import { JWT } from "google-auth-library";
-import trackerConfig from "../../tracker.config";
-import { BudgetData, CategoryData } from "@/types";
 import { config } from "@/app.config";
+import { BudgetData, CategoryData } from "@/types";
+import { JWT } from "google-auth-library";
+import { google, sheets_v4 } from "googleapis";
 
 export function parseCurrencyStringToNumber(value: string): number {
   return parseFloat(value.replace(/[^0-9.-]+/g, ""));
@@ -64,6 +63,7 @@ export async function getLastSheetName(
   return lastSheetName;
 }
 
+// FRANKA: use this function as a template to get other fields from "Master List"
 export async function getCategoryData(
   spreadsheetId: string,
   jwtClient: JWT,
@@ -79,18 +79,6 @@ export async function getCategoryData(
 
   return getData.values;
 }
-
-export const getSheetData = async () => {
-  let jwtClient = await getJwtClient();
-
-  let spreadsheetId = process.env.SPREADSHEET_ID || "";
-
-  let sheets = google.sheets("v4");
-
-  const data = await getCategoryData(spreadsheetId, jwtClient, sheets);
-
-  return data;
-};
 
 export const fetcher = async (url: string, options?: Record<any, any>) => {
   const res = await fetch(url, options);
@@ -309,7 +297,7 @@ export async function addUnverifiedExpense(
       jwtClient,
       sheets,
       values,
-      trackerConfig.unverifiedSheetName
+      config.UNVERIFIED_SHEET_NAME
     );
     console.log("✅ Expense added successfully:", data);
   } catch (error) {
@@ -326,10 +314,11 @@ export const fetchCategoryData = async (): Promise<CategoryData[]> => {
   const data = (await getCategoryData(spreadsheetId, jwtClient, sheets)) || [];
 
   const formattedData = data.map((item: any) => {
+    // Franka, item[0] #48BB78 item[0]
     return {
       name: item[0],
-      color: item[1],
-      id: item[2],
+      color: "#48BB78",
+      id: item[0],
     };
   });
 
