@@ -25,7 +25,6 @@ export const UnverifiedItem: FC<IUnverifiedItemProps> = ({ item, onClick }) => {
     >
       <HStack
         divider={<StackDivider />}
-        as="button"
         onClick={() => onClick(item, category)}
       >
         <Text whiteSpace="break-spaces" fontSize={12} color="white">

@@ -2,6 +2,15 @@
 const nextConfig = {
   reactStrictMode: true,
   output: "standalone",
+  webpack(config, { isServer }) {
+    if (!isServer) {
+      // Ensure only one instance of GenerateSW is being added
+      config.plugins = config.plugins.filter(
+        (plugin) => plugin.constructor.name !== "GenerateSW"
+      );
+    }
+    return config;
+  },
 };
 
 const withPWA = require("next-pwa")({

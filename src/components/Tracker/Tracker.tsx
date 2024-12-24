@@ -20,6 +20,9 @@ import { BudgetBadgeStack } from "@/components/Budget/BudgetBadgeStack";
 import { TrackerCategoryItem } from "@/components/Tracker/TrackerCategoryItem";
 import CategoryDetectionTestModal from "@/components/Unverified/CategoryDetectionTestModal";
 
+import packageJson from "../../../package.json";
+
+
 interface ITrackerProps extends StackProps {
   isLoading: boolean;
   onSave: (category: Category, description: string, expense: number) => void;
@@ -59,7 +62,7 @@ export const Tracker: FC<ITrackerProps> = ({ onSave, isLoading, ...rest }) => {
       {...rest}
     >
       <HStack justify="space-between" w="100%" p="40px 6px 20px 0px">
-        <Heading as="h1">GS Expense Tracker</Heading>
+        <Heading as="h1">GS Expense Tracker v{packageJson.version}</Heading>
         <Box w="24px">
           <CategoryDetectionTestModal isOpen={isOpen} onClose={onClose} />
           <TrackerMenu onTestModalOpen={onOpen} />
@@ -81,7 +84,7 @@ export const Tracker: FC<ITrackerProps> = ({ onSave, isLoading, ...rest }) => {
         gap="10px"
         w="min(100%, 800px)"
       >
-        {categories?.sort(categorySortFunction)?.map((item: Category) => {
+        {categories?.sort(categorySortFunction)?.map((item: Category, i: number) => {
           return (
             <TrackerCategoryItem
               onClick={() => {
@@ -91,7 +94,7 @@ export const Tracker: FC<ITrackerProps> = ({ onSave, isLoading, ...rest }) => {
                 });
               }}
               isSelected={selectedCategory?.name === item.name}
-              key={item.id}
+              key={item.id + i}
               category={item}
               color={item.color}
             />
