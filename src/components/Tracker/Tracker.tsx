@@ -58,7 +58,7 @@ export const Tracker: FC<ITrackerProps> = ({ onSave, isLoading, ...rest }) => {
       spacing={4}
       {...rest}
     >
-      <HStack justify="space-between" w="100%" p="10px 6px 20px 0px">
+      <HStack justify="space-between" w="100%" p="40px 6px 20px 0px">
         <Heading as="h1">GS Expense Tracker</Heading>
         <Box w="24px">
           <CategoryDetectionTestModal isOpen={isOpen} onClose={onClose} />

@@ -7,6 +7,9 @@ import { Layout } from "@/components/Layout/layout";
 import NoSSR from "@/utils/NoSSR";
 import trackerConfig from "../../tracker.config";
 
+import packageJson from "../../package.json";
+import OfflineAlert from "@/components/shared/OfflineAlert";
+
 try {
   window.trackerConfig = trackerConfig;
 } catch (error) {}
@@ -23,10 +26,14 @@ const Home: NextPage<{ fallback: Record<string, any> }> = ({ fallback }) => {
       </Head>
       <main>
         <NoSSR>
+          <OfflineAlert />
           <Layout />
         </NoSSR>
         <Flex as="footer" mt="10vh" px="10px" py={4} justifyContent="center">
           <Box w="min(100%, 800px)" />
+        </Flex>
+        <Flex justifyContent={"center"} mt={4}>
+          <p>V{packageJson.version}</p>
         </Flex>
       </main>
     </SWRConfig>
