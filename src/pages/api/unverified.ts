@@ -62,7 +62,16 @@ async function handlePostRequest(context: RequestContext) {
       );
   }
 
-  const constructedValues = values || [[category, value, description, date]];
+  const formattedDate = new Intl.DateTimeFormat("en-US", {
+    timeZone: "Europe/Belgrade",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).format(new Date(date));
+
+  const constructedValues = values || [
+    [category, value, description, formattedDate],
+  ];
 
   try {
     await updateSheet(

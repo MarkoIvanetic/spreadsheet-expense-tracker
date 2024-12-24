@@ -6,6 +6,7 @@ import { SWRConfig } from "swr";
 import { Layout } from "@/components/Layout/layout";
 import NoSSR from "@/utils/NoSSR";
 
+import OfflineAlert from "@/components/shared/OfflineAlert";
 
 const Home: NextPage<{ fallback: Record<string, any> }> = ({ fallback }) => {
   return (
@@ -19,6 +20,7 @@ const Home: NextPage<{ fallback: Record<string, any> }> = ({ fallback }) => {
       </Head>
       <main>
         <NoSSR>
+          <OfflineAlert />
           <Layout />
         </NoSSR>
         <Flex as="footer" mt="10vh" px="10px" py={4} justifyContent="center">

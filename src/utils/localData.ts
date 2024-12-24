@@ -28,7 +28,15 @@ export interface MatchingData {
 
 export const matchingData: Array<MatchingData> = [
   {
-    includes: ["WoltEUR", "Mlinar", "Pekara", "Burger", "McDonald", "Wolt"],
+    includes: [
+      "WoltEUR",
+      "Mlinar",
+      "Pekara",
+      "Pekarna",
+      "Burger",
+      "McDonald",
+      "Wolt",
+    ],
     category: categoriesLocal.food,
   },
   {
@@ -69,7 +77,7 @@ export const matchingData: Array<MatchingData> = [
     category: categoriesLocal.car_gas,
   },
   {
-    includes: ["GoogleEUR", "PevexEUR", "Bauhaus"],
+    includes: ["GoogleEUR", "PevexEUR", "Bauhaus", "EmmezetaEUR"],
     category: categoriesLocal.mortgage_bills,
   },
 ];
