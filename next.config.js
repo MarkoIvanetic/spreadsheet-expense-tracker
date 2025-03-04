@@ -13,6 +13,8 @@ const nextConfig = {
   },
 };
 
+const API_HOST = process.env.API_HOST?.replace(/\/$/, ""); // Ensure no trailing slash
+
 const withPWA = require("next-pwa")({
   dest: "public",
   register: true,
@@ -20,7 +22,7 @@ const withPWA = require("next-pwa")({
   cacheStartUrl: true, // Cache the start URL
   runtimeCaching: [
     {
-      urlPattern: /^https:\/\/merry-treacle-887c5b\.netlify\.app\/api\/.*$/,
+      urlPattern: new RegExp(`^${API_HOST}/api/.*$`),
       handler: "NetworkFirst", // Tries network first; falls back to cache if offline
       options: {
         cacheName: "api-cache",

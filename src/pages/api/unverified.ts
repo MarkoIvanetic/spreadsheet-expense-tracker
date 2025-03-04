@@ -32,6 +32,12 @@ async function handleGetRequest(context: RequestContext) {
   const { res, spreadsheetId, jwtClient, sheets, sheetName } = context;
   try {
     const rows = await getAllRows(spreadsheetId, jwtClient, sheets, sheetName);
+
+    res.setHeader(
+      "Cache-Control",
+      "no-store, no-cache, must-revalidate, proxy-revalidate"
+    );
+
     return res.status(200).json(rows);
   } catch (error: any) {
     return res
