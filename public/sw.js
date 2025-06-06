@@ -95,12 +95,12 @@ define(["./workbox-8817a5e5"], function (workbox) {
     }),
     "GET"
   );
-
   workbox.registerRoute(
-    ({ url }) => url.pathname.startsWith("/api/"),
-    new workbox.NetworkFirst({
-      cacheName: "api-cache",
+    /.*/i,
+    new workbox.NetworkOnly({
+      cacheName: "dev",
       plugins: [],
-    })
+    }),
+    "GET"
   );
 });

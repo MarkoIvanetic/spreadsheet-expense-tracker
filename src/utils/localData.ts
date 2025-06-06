@@ -36,6 +36,7 @@ export const matchingData: Array<MatchingData> = [
       "Burger",
       "McDonald",
       "Wolt",
+      "Trattoria",
     ],
     category: categoriesLocal.food,
   },
@@ -61,7 +62,7 @@ export const matchingData: Array<MatchingData> = [
     category: categoriesLocal.clothing,
   },
   {
-    includes: ["Laka"],
+    includes: ["Laka", "Mali", "Hangtime"],
     category: categoriesLocal.drinks_outings,
   },
   {
@@ -77,7 +78,7 @@ export const matchingData: Array<MatchingData> = [
     category: categoriesLocal.car_gas,
   },
   {
-    includes: ["GoogleEUR", "PevexEUR", "Bauhaus", "EmmezetaEUR"],
+    includes: ["GoogleEUR", "PevexEUR", "Bauhaus", "EmmezetaEUR", "A1"],
     category: categoriesLocal.mortgage_bills,
   },
 ];

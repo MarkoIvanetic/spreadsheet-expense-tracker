@@ -37,7 +37,7 @@ export const TrackerCategoryItem: FC<TrackerCategoryItemProps> = ({
       }}
       {...rest}
     >
-      <Text whiteSpace="break-spaces" fontSize={12} color="white">
+      <Text whiteSpace="break-spaces" fontSize={14} py={2} color="white">
         {" "}
         {category.name}
       </Text>
