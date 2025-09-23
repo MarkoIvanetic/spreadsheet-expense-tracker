@@ -37,6 +37,8 @@ export const matchingData: Array<MatchingData> = [
       "McDonald",
       "Wolt",
       "Trattoria",
+      "Peko",
+      "Tao",
     ],
     category: categoriesLocal.food,
   },
@@ -54,6 +56,9 @@ export const matchingData: Array<MatchingData> = [
       "Tvornica",
       "SamopostrezbaEUR",
       "Supernova",
+      "PlodineEUR",
+      "Ela",
+      "PEKIN", // moved here
     ],
     category: categoriesLocal.groceries,
   },
@@ -62,7 +67,7 @@ export const matchingData: Array<MatchingData> = [
     category: categoriesLocal.clothing,
   },
   {
-    includes: ["Laka", "Mali", "Hangtime"],
+    includes: ["Laka", "Mali", "Hangtime", "Krivi"],
     category: categoriesLocal.drinks_outings,
   },
   {
@@ -80,6 +85,10 @@ export const matchingData: Array<MatchingData> = [
   {
     includes: ["GoogleEUR", "PevexEUR", "Bauhaus", "EmmezetaEUR", "A1"],
     category: categoriesLocal.mortgage_bills,
+  },
+  {
+    includes: ["Hrvatske", "Toll", "Np"],
+    category: categoriesLocal.travel,
   },
 ];
 

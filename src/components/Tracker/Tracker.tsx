@@ -1,8 +1,10 @@
 import {
   Box,
+  Button,
   Flex,
   HStack,
   Heading,
+  Link,
   StackProps,
   VStack,
   useDisclosure,
@@ -21,7 +23,6 @@ import { TrackerCategoryItem } from "@/components/Tracker/TrackerCategoryItem";
 import CategoryDetectionTestModal from "@/components/Unverified/CategoryDetectionTestModal";
 
 import packageJson from "../../../package.json";
-
 
 interface ITrackerProps extends StackProps {
   isLoading: boolean;
@@ -62,7 +63,18 @@ export const Tracker: FC<ITrackerProps> = ({ onSave, isLoading, ...rest }) => {
       {...rest}
     >
       <HStack justify="space-between" w="100%" p="40px 6px 20px 0px">
-        <Heading as="h1">GS Expense Tracker v{packageJson.version}</Heading>
+        <Flex gap={6} alignItems="center">
+          <Heading as="h1">GS Expense Tracker v{packageJson.version}</Heading>
+          <Button
+            as={Link}
+            href="https://docs.google.com/spreadsheets/d/1m4qUwDiDhWZHYNmWT3kD3ka7Eb9SWogQ0_QWyVssyw0/edit?gid=2041952472#gid=2041952472"
+            isExternal
+            color="green.300"
+            ml={4}
+          >
+            Spreadsheet
+          </Button>
+        </Flex>
         <Box w="24px">
           <CategoryDetectionTestModal isOpen={isOpen} onClose={onClose} />
           <TrackerMenu onTestModalOpen={onOpen} />
@@ -84,22 +96,24 @@ export const Tracker: FC<ITrackerProps> = ({ onSave, isLoading, ...rest }) => {
         gap="10px"
         w="min(100%, 800px)"
       >
-        {categories?.sort(categorySortFunction)?.map((item: Category, i: number) => {
-          return (
-            <TrackerCategoryItem
-              onClick={() => {
-                setSelectedCategory(item);
-                setTimeout(() => {
-                  inputRef.current?.focus?.();
-                });
-              }}
-              isSelected={selectedCategory?.name === item.name}
-              key={item.id + i}
-              category={item}
-              color={item.color}
-            />
-          );
-        })}
+        {categories
+          ?.sort(categorySortFunction)
+          ?.map((item: Category, i: number) => {
+            return (
+              <TrackerCategoryItem
+                onClick={() => {
+                  setSelectedCategory(item);
+                  setTimeout(() => {
+                    inputRef.current?.focus?.();
+                  });
+                }}
+                isSelected={selectedCategory?.name === item.name}
+                key={item.id + i}
+                category={item}
+                color={item.color}
+              />
+            );
+          })}
       </Flex>
     </VStack>
   );
