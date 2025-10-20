@@ -1,7 +1,6 @@
 import { getCategoriesLocal } from "@/hooks/useCategories";
 import { NotificationData } from "@/types";
 import { matchingData } from "@/utils/localData";
-import stringSimilarity from "string-similarity";
 
 export const generateArray = (n: number) => {
   return Array.from(Array(n));
@@ -33,17 +32,69 @@ export const focusInputById = (id: string): void => {
 };
 
 /**
+ * Calculates the Levenshtein distance between two strings.
+ */
+const levenshteinDistance = (str1: string, str2: string): number => {
+  const matrix = Array(str2.length + 1)
+    .fill(null)
+    .map(() => Array(str1.length + 1).fill(null));
+
+  for (let i = 0; i <= str1.length; i++) {
+    matrix[0][i] = i;
+  }
+
+  for (let j = 0; j <= str2.length; j++) {
+    matrix[j][0] = j;
+  }
+
+  for (let j = 1; j <= str2.length; j++) {
+    for (let i = 1; i <= str1.length; i++) {
+      const substitutionCost = str1[i - 1] === str2[j - 1] ? 0 : 1;
+      matrix[j][i] = Math.min(
+        matrix[j][i - 1] + 1, // insertion
+        matrix[j - 1][i] + 1, // deletion
+        matrix[j - 1][i - 1] + substitutionCost // substitution
+      );
+    }
+  }
+
+  return matrix[str2.length][str1.length];
+};
+
+/**
+ * Calculates similarity between two strings (0-1, where 1 is identical).
+ */
+const calculateSimilarity = (str1: string, str2: string): number => {
+  const maxLength = Math.max(str1.length, str2.length);
+  if (maxLength === 0) return 1;
+  const distance = levenshteinDistance(str1.toLowerCase(), str2.toLowerCase());
+  return 1 - distance / maxLength;
+};
+
+/**
  * Finds the most similar string from a list of strings.
  * @param target - The string to compare against the list.
  * @param options - The list of strings to compare.
- * @returns The most similar string from the list.
+ * @returns The index of the most similar string from the list.
  */
 export const findBestMatchIndex = (
   target: string,
   options: string[]
 ): number => {
-  const bestMatch = stringSimilarity.findBestMatch(target, options);
-  return bestMatch.bestMatchIndex;
+  if (options.length === 0) return -1;
+
+  let bestIndex = 0;
+  let bestSimilarity = calculateSimilarity(target, options[0]);
+
+  for (let i = 1; i < options.length; i++) {
+    const similarity = calculateSimilarity(target, options[i]);
+    if (similarity > bestSimilarity) {
+      bestSimilarity = similarity;
+      bestIndex = i;
+    }
+  }
+
+  return bestIndex;
 };
 
 export const findBestCategoryMatchByName = (categoryName: string) => {

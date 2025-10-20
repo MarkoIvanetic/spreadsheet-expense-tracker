@@ -2,23 +2,25 @@
 const nextConfig = {
   reactStrictMode: true,
   output: "standalone",
-  webpack(config, { isServer }) {
-    if (!isServer) {
-      // Ensure only one instance of GenerateSW is being added
-      config.plugins = config.plugins.filter(
-        (plugin) => plugin.constructor.name !== "GenerateSW"
-      );
-    }
-    return config;
+  experimental: {
+    // Disable ISR for Netlify compatibility
+    isrMemoryCacheSize: 0,
   },
 };
 
-const API_HOST = process.env.API_HOST?.replace(/\/$/, ""); // Ensure no trailing slash
+// Temporarily disable PWA for debugging
+// const API_HOST = process.env.API_HOST?.replace(/\/$/, ""); // Ensure no trailing slash
 
+// For now, export the basic config to isolate deployment issues
+module.exports = nextConfig;
+
+// If you want to re-enable PWA after deployment works, uncomment below:
+/*
 const withPWA = require("next-pwa")({
   dest: "public",
   register: true,
   skipWaiting: true,
+  disable: process.env.NODE_ENV === "development", // Disable PWA in development
   cacheStartUrl: true, // Cache the start URL
   runtimeCaching: [
     {
@@ -61,3 +63,4 @@ const withPWA = require("next-pwa")({
 });
 
 module.exports = withPWA(nextConfig);
+*/

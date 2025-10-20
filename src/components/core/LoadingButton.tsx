@@ -28,26 +28,6 @@ export const LoadingButton: FC<LoadingButtonProps> = ({
       setColorScheme(colorScheme);
       return;
     }
-
-    let emojiCount = 0;
-    const interval = setInterval(() => {
-      emojiCount++;
-      if (emojiCount < 5) {
-        setDynamicText(`${loadingText}${"🔥".repeat(emojiCount)}`);
-      }
-      if (emojiCount === 5) {
-        setColorScheme("yellow");
-      } else if (emojiCount === 8) {
-        setColorScheme("red");
-        setDynamicText(`Suffering... 🥵🥵🥵`);
-      }
-      if (emojiCount === 12) {
-        setDynamicText(`Oh boy... 💀💀💀`);
-        clearInterval(interval);
-      }
-    }, 800);
-
-    return () => clearInterval(interval);
   }, [isLoading, loadingText, colorScheme]);
 
   return (
