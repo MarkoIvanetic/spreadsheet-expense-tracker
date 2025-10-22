@@ -1,10 +1,10 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
-  output: "standalone",
-  experimental: {
-    // Disable ISR for Netlify compatibility
-    isrMemoryCacheSize: 0,
+  output: "export", // Static export for basic deployment
+  trailingSlash: false,
+  images: {
+    unoptimized: true, // Required for static export
   },
 };
 

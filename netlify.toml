@@ -1,19 +1,6 @@
 [build]
-  # Command to build the standalone output
   command = "pnpm run build"
-
-  # Publish directory points to the standalone folder
-  publish = ".next"
-
-  # Functions directory for Netlify serverless functions (used for SSR and API routes)
-  functions = "netlify/functions"
+  publish = "out"
 
 [build.environment]
-  # Specify Node.js version
-  NODE_VERSION = "22"
-  # Enable pnpm
-  NPM_FLAGS = "--version" # This helps Netlify detect pnpm
-
-[[plugins]]
-  # Include the Netlify Next.js plugin to optimize caching and support Next.js features
-  package = "@netlify/plugin-nextjs"
+  NODE_VERSION = "18"
