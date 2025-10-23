@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
-  output: "export", // Static export for basic deployment
+  output: "standalone", // Static export for basic deployment
   trailingSlash: false,
   images: {
     unoptimized: true, // Required for static export

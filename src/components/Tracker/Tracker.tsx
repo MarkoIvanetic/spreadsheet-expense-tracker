@@ -71,6 +71,7 @@ export const Tracker: FC<ITrackerProps> = ({ onSave, isLoading, ...rest }) => {
             isExternal
             color="green.300"
             ml={4}
+            px={4}
           >
             Spreadsheet
           </Button>

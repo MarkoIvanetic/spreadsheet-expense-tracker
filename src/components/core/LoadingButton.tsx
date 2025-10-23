@@ -1,4 +1,4 @@
-import { Button, ButtonProps } from "@chakra-ui/react";
+import { Box, Button, ButtonProps } from "@chakra-ui/react";
 import { FC, useEffect, useState } from "react";
 
 interface LoadingButtonProps extends ButtonProps {
@@ -15,7 +15,7 @@ export const LoadingButton: FC<LoadingButtonProps> = ({
   onClick,
   text,
   loadingText = "Loading",
-  colorScheme = "pink",
+  colorScheme = "purple",
   size = "sm",
   ...rest
 }) => {
@@ -33,7 +33,9 @@ export const LoadingButton: FC<LoadingButtonProps> = ({
   return (
     <Button
       {...rest}
+      border="1px solid white"
       colorScheme={colorSchemeLocal}
+      color="white"
       size={size}
       onClick={onClick}
       isLoading={isLoading}

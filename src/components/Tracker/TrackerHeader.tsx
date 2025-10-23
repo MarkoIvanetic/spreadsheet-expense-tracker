@@ -1,5 +1,9 @@
+import { LoadingButton } from "@/components/core/LoadingButton";
+import { useTrackerContext } from "@/TrackerContext";
+import { Category } from "@/types";
+import { deleteUnverifiedData } from "@/utils/apiLocal";
+import { getFirstEmoji } from "@/utils/misc";
 import {
-  Button,
   Flex,
   Input,
   InputGroup,
@@ -9,13 +13,8 @@ import {
   forwardRef,
   useToast,
 } from "@chakra-ui/react";
-import { useTrackerContext } from "@/TrackerContext";
-import { Category } from "@/types";
-import { deleteUnverifiedData } from "@/utils/apiLocal";
-import { getFirstEmoji } from "@/utils/misc";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { FC, MutableRefObject } from "react";
-import { LoadingButton } from "@/components/core/LoadingButton";
 
 interface ITrackerHeaderProps extends StackProps {
   isLoading: boolean;

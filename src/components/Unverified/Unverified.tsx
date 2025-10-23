@@ -1,4 +1,5 @@
 import { LoadingButton } from "@/components/core/LoadingButton";
+
 import {
   UnverifiedItem,
   UnverifiedItemSkeleton,
@@ -163,12 +164,14 @@ export const Unverified: FC<IUnverifiedProps> = ({
         <Heading as="h2" size="md" py={2}>
           Pending auto expenses
         </Heading>
-        <LoadingButton
+        <Button
+          colorScheme="blue"
+          size="sm"
           isLoading={isBulkLoading}
           onClick={handleAddAll}
-          text="Add all"
-          loadingText="Adding"
-        />
+        >
+          Add all
+        </Button>
       </Flex>
       {unverified.length === 0 && (
         <Text fontSize={14} color="gray.400">
