@@ -1,10 +1,10 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
-  output: "standalone", // Static export for basic deployment
+  // Remove output config to let Netlify plugin handle it
   trailingSlash: false,
   images: {
-    unoptimized: true, // Required for static export
+    unoptimized: true, // Better for Netlify
   },
 };
 
