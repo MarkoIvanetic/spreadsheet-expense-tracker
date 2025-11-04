@@ -6,7 +6,8 @@ This app uses Google Spreadsheet as a database for tracking expenses. To set eve
 
 For a more detailed backend setup guide, see: [How to Use Google Sheets As a Database For Your Business](https://blog.coupler.io/how-to-use-google-sheets-as-database/#Use_Google_Sheets_as_a_database_for_a_website).
 
-<img width="820" alt="image" src="https://github.com/user-attachments/assets/f1de443d-7240-49b1-8928-58be73ae306d">
+<img width="656" height="807" alt="image" src="https://github.com/user-attachments/assets/9fae94fc-abf3-4f67-a2eb-9a84345fcc96" />
+
 
 
 ## Getting Started
