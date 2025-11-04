@@ -1,17 +1,18 @@
-import { LoadingButton } from "@/components/core/LoadingButton";
+import { TrackSection } from "@/components/shared/TrackSection";
 import { useTrackerContext } from "@/TrackerContext";
 import { Category } from "@/types";
 import { deleteUnverifiedData } from "@/utils/apiLocal";
 import { getFirstEmoji } from "@/utils/misc";
+import { AddIcon, InfoOutlineIcon, PhoneIcon } from "@chakra-ui/icons";
 import {
-  Flex,
+  Button,
+  forwardRef,
   Input,
   InputGroup,
   InputLeftElement,
   StackProps,
-  VStack,
-  forwardRef,
   useToast,
+  VStack,
 } from "@chakra-ui/react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { FC, MutableRefObject } from "react";
@@ -40,9 +41,7 @@ export const TrackerHeader: FC<ITrackerHeaderProps> = forwardRef(
     const queryClient = useQueryClient();
     const toast = useToast();
 
-    // Border color based on selected category
-    const borderColor =
-      selectedCategory?.color || (selectedCategory ? "blue.200" : "red.200");
+    // Simplified layout: no dynamic border colors needed
 
     // Mutation for deleting unverified data
     const mutation = useMutation({
@@ -50,6 +49,7 @@ export const TrackerHeader: FC<ITrackerHeaderProps> = forwardRef(
       onSuccess: () => {
         setSelectedUnverifiedExpenseId(undefined);
         queryClient.invalidateQueries({ queryKey: ["unverified"] });
+        queryClient.invalidateQueries({ queryKey: ["api/budget"] });
       },
       onError: (error) => {
         console.error("Error deleting data:", error);
@@ -80,78 +80,55 @@ export const TrackerHeader: FC<ITrackerHeaderProps> = forwardRef(
     };
 
     return (
-      <Flex gap={3} flexDir="row" w="min(100%, 800px)">
-        <VStack
-          flexDir="column"
-          w="100%"
-          justifyContent="flex-start"
-          spacing={4}
-        >
-          {/* Expense Input Field */}
-          <InputGroup
-            borderRadius="10px"
-            borderWidth="2px"
-            borderColor={borderColor}
-            size="md"
-            w="100%"
-          >
-            <InputLeftElement
-              pointerEvents="none"
-              color="gray.300"
-              fontSize="1.2em"
-            >
-              $
+      <TrackSection title="Add Expense">
+        <VStack align="stretch" spacing={4}>
+          {/* Amount Field */}
+          <InputGroup>
+            <InputLeftElement pointerEvents="none">
+              {getFirstEmoji(selectedCategory?.name || "🤷")}
             </InputLeftElement>
             <Input
-              w="100%"
               id="expense-input"
-              _focusVisible={{ borderColor: borderColor }}
               ref={ref}
-              value={inputValue}
-              p="10px 4.5rem 10px 40px"
               type="number"
-              placeholder="Enter expense"
+              value={inputValue}
+              bg="rgba(255, 255, 255, 0.07)"
               onChange={(e) => setInputValue(+e.target.value)}
-              onFocus={(event) => event.target.select()}
+              onFocus={(e) => e.target.select()}
+              placeholder="Amount"
+              aria-label="Expense amount"
             />
           </InputGroup>
 
-          {/* Description Input Field */}
-          <InputGroup
-            borderRadius="10px"
-            borderWidth="2px"
-            borderColor={borderColor}
-            size="md"
-            w="100%"
-          >
-            <InputLeftElement pointerEvents="none" fontSize="1.2em">
-              {getFirstEmoji(selectedCategory?.name) || "🤷‍♂️"}
+          {/* Description Field */}
+          <InputGroup>
+            <InputLeftElement pointerEvents="none">
+              <InfoOutlineIcon color="green.300" />
             </InputLeftElement>
             <Input
-              w="100%"
-              _focusVisible={{ borderColor: borderColor }}
-              value={description}
-              p="10px 4.5rem 10px 40px"
               type="text"
-              placeholder="Enter description"
+              value={description}
+              bg="rgba(255, 255, 255, 0.07)"
               onChange={(e) => setDescription(e.target.value)}
+              placeholder="Description"
+              aria-label="Expense description"
             />
           </InputGroup>
-        </VStack>
 
-        {/* Save Button */}
-        <LoadingButton
-          w="200px"
-          height="auto"
-          bg={borderColor}
-          isDisabled={!selectedCategory?.name || !inputValue}
-          isLoading={isLoading}
-          onClick={handleSaveClick}
-          text="Add record"
-          loadingText="Adding..."
-          fontSize="1.25rem"
-        ></LoadingButton>
-      </Flex>
+          <Button
+            colorScheme="green"
+            isDisabled={!selectedCategory?.name || !inputValue}
+            isLoading={isLoading}
+            onClick={handleSaveClick}
+            leftIcon={<AddIcon />}
+            aria-label="Add expense"
+          >
+            Add Expense
+          </Button>
+        </VStack>
+      </TrackSection>
     );
   }
 );
+
+TrackerHeader.displayName = "TrackerHeader";

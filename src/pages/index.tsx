@@ -28,9 +28,9 @@ const Home: NextPage<{ fallback: Record<string, any> }> = ({ fallback }) => {
           <OfflineAlert />
           <Layout />
         </NoSSR>
-        <Flex as="footer" mt="10vh" px="10px" py={4} justifyContent="center">
+        {/* <Flex as="footer" mt="10vh" px="10px" py={4} justifyContent="center">
           <Box w="min(100%, 800px)" />
-        </Flex>
+        </Flex> */}
       </main>
     </SWRConfig>
   );

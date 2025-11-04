@@ -1,28 +1,14 @@
-import {
-  Box,
-  Button,
-  Flex,
-  HStack,
-  Heading,
-  Link,
-  StackProps,
-  VStack,
-  useDisclosure,
-} from "@chakra-ui/react";
+import { Box, Flex, SimpleGrid, StackProps, VStack } from "@chakra-ui/react";
 
 import { useTrackerContext } from "@/TrackerContext";
+import { TrackerCategoryItem } from "@/components/Tracker/TrackerCategoryItem";
 import { useCategories } from "@/hooks/useCategories";
 import { useLocalStorage } from "@/hooks/useLocalStorage";
 import { useStats } from "@/hooks/useStats";
 import { Category } from "@/types";
 import { FC, useRef } from "react";
 import { TrackerHeader } from "./TrackerHeader";
-import { TrackerMenu, TrackerViewState } from "./TrackerMenu";
-import { BudgetBadgeStack } from "@/components/Budget/BudgetBadgeStack";
-import { TrackerCategoryItem } from "@/components/Tracker/TrackerCategoryItem";
-import CategoryDetectionTestModal from "@/components/Unverified/CategoryDetectionTestModal";
-
-import packageJson from "../../../package.json";
+import { TrackerViewState } from "./TrackerMenu";
 
 interface ITrackerProps extends StackProps {
   isLoading: boolean;
@@ -32,9 +18,7 @@ interface ITrackerProps extends StackProps {
 export const Tracker: FC<ITrackerProps> = ({ onSave, isLoading, ...rest }) => {
   const inputRef = useRef<HTMLInputElement | undefined>(undefined);
 
-  const { data: categories, isLoading: isLoadingCategories } = useCategories();
-
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  const { data: categories } = useCategories();
 
   const [stats] = useStats();
 
@@ -53,69 +37,30 @@ export const Tracker: FC<ITrackerProps> = ({ onSave, isLoading, ...rest }) => {
   const { selectedCategory, setSelectedCategory } = useTrackerContext();
 
   return (
-    <VStack
-      alignItems="flex-start"
-      justifyContent="center"
-      py="12px"
-      px="12px"
-      minW="400px"
-      spacing={4}
-      {...rest}
+    <Flex
+      direction="row"
+      alignItems="center"
+      justifyContent="flex-start"
+      wrap="wrap"
+      gap="10px"
+      w="min(100%, 800px)"
     >
-      <HStack justify="space-between" w="100%" p="40px 6px 20px 0px">
-        <Flex gap={6} alignItems="center">
-          <Heading as="h1">GS Expense Tracker v{packageJson.version}</Heading>
-          <Button
-            as={Link}
-            href="https://docs.google.com/spreadsheets/d/1m4qUwDiDhWZHYNmWT3kD3ka7Eb9SWogQ0_QWyVssyw0/edit?gid=2041952472#gid=2041952472"
-            isExternal
-            color="green.300"
-            ml={4}
-            px={4}
-          >
-            Spreadsheet
-          </Button>
-        </Flex>
-        <Box w="24px">
-          <CategoryDetectionTestModal isOpen={isOpen} onClose={onClose} />
-          <TrackerMenu onTestModalOpen={onOpen} />
+      {categories.sort(categorySortFunction).map((item, i) => (
+        <Box key={item.id + i} flex="1 1 130px" minW="max-content">
+          <TrackerCategoryItem
+            onClick={() => {
+              setSelectedCategory(item);
+              setTimeout(() => inputRef.current?.focus?.());
+            }}
+            isSelected={selectedCategory?.name === item.name}
+            category={item}
+            color={item.color}
+            // style={{ width: "100%" }}
+            w="100%"
+            maxW="250px"
+          />
         </Box>
-      </HStack>
-      <TrackerHeader
-        selectedCategory={selectedCategory}
-        onSave={onSave}
-        isLoading={isLoading}
-        ref={inputRef}
-      />
-      <BudgetBadgeStack />
-      <Flex
-        direction={viewMode === TrackerViewState.Grid ? "row" : "column"}
-        alignItems={viewMode === TrackerViewState.Grid ? "center" : "stretch"}
-        justifyContent="flex-start"
-        color="white"
-        flexWrap="wrap"
-        gap="10px"
-        w="min(100%, 800px)"
-      >
-        {categories
-          ?.sort(categorySortFunction)
-          ?.map((item: Category, i: number) => {
-            return (
-              <TrackerCategoryItem
-                onClick={() => {
-                  setSelectedCategory(item);
-                  setTimeout(() => {
-                    inputRef.current?.focus?.();
-                  });
-                }}
-                isSelected={selectedCategory?.name === item.name}
-                key={item.id + i}
-                category={item}
-                color={item.color}
-              />
-            );
-          })}
-      </Flex>
-    </VStack>
+      ))}
+    </Flex>
   );
 };

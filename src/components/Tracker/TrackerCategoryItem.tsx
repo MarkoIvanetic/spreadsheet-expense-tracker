@@ -1,5 +1,6 @@
 import { Category } from "@/types";
 import {
+  Box,
   Button,
   ButtonProps,
   Circle,
@@ -27,20 +28,21 @@ export const TrackerCategoryItem: FC<TrackerCategoryItemProps> = ({
 
   return (
     // @ts-ignore
-    <Circle
+    <Box
       as={Button}
-      bg={color}
-      border={isSelected ? "2px solid gold" : "2px solid transparent"}
+      bg={isSelected ? color : "rgba(255, 255, 255, 0.07)"}
+      border={isSelected ? "2px solid transparent" : "2px solid transparent"}
+      py={6}
+      borderRadius="12px"
       _hover={{
-        bg: color,
-        border: "2px solid white",
+        // bg: color,
+        border: `2px solid ${color}`,
       }}
       {...rest}
     >
-      <Text whiteSpace="break-spaces" fontSize={14} py={2} color="white">
-        {" "}
+      <Text whiteSpace="break-spaces" fontSize={14} color="white">
         {category.name}
       </Text>
-    </Circle>
+    </Box>
   );
 };

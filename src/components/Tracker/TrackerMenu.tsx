@@ -6,6 +6,7 @@ import { Category } from "@/types";
 import {
   Button,
   IconButton,
+  Link,
   Menu,
   MenuButton,
   MenuItem,
@@ -19,6 +20,9 @@ export enum TrackerViewState {
   Grid = 1,
   List = 2,
 }
+
+const SPREADSHEET_URL =
+  "https://docs.google.com/spreadsheets/d/1m4qUwDiDhWZHYNmWT3kD3ka7Eb9SWogQ0_QWyVssyw0/edit?gid=2041952472#gid=2041952472";
 
 export const TrackerMenu: FC<{ onTestModalOpen: () => void }> = ({
   onTestModalOpen,
@@ -52,36 +56,46 @@ export const TrackerMenu: FC<{ onTestModalOpen: () => void }> = ({
     <Menu>
       <MenuButton
         as={IconButton}
-        border="2px solid white"
-        bg={selectedCategory ? selectedCategory.color : "red.200"}
+        border="1px solid white"
+        bg="green.500"
         aria-label="Options"
         icon={<MenuIcon color="white" />}
         variant="outline"
         size="sm"
       />
       <MenuList alignItems="flex-start">
+        <MenuItem as={Link} href={SPREADSHEET_URL} isExternal color="green.300">
+          Spreadsheet
+        </MenuItem>
         <MenuItem
           justifyContent="flex-start"
           as={Button}
+          colorScheme="green"
           onClick={toggleColorMode}
         >
           Toggle Color Mode
         </MenuItem>
-        <MenuItem justifyContent="flex-start" as={Button} onClick={toggleGrid}>
+        <MenuItem
+          justifyContent="flex-start"
+          as={Button}
+          colorScheme="green"
+          onClick={toggleGrid}
+        >
           Switch to {viewMode === TrackerViewState.Grid ? "List" : "Grid"} view
         </MenuItem>
         <MenuItem
           justifyContent="flex-start"
           as={Button}
-          colorScheme="red"
+          colorScheme="green"
           onClick={onTestModalOpen}
         >
           Test category detection
         </MenuItem>
+
         <MenuItem
           justifyContent="flex-start"
           as={Button}
-          colorScheme="red"
+          colorScheme="green"
           onClick={refreshData}
         >
           Reset data

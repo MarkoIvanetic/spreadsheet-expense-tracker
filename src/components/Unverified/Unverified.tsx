@@ -1,4 +1,5 @@
 import { LoadingButton } from "@/components/core/LoadingButton";
+import { TrackSection } from "@/components/shared/TrackSection";
 
 import {
   UnverifiedItem,
@@ -13,6 +14,7 @@ import {
 } from "@/utils/apiLocal";
 import { focusInputById } from "@/utils/misc";
 import {
+  Box,
   Button,
   Flex,
   Heading,
@@ -66,7 +68,10 @@ export const Unverified: FC<IUnverifiedProps> = ({
         duration: 3000,
         isClosable: true,
       });
+
       setBulkLoading(false);
+
+      queryClient.invalidateQueries({ queryKey: ["api/budget"] });
       queryClient.invalidateQueries({ queryKey: ["unverified"] });
     },
     onError: (error: any) => {
@@ -129,59 +134,56 @@ export const Unverified: FC<IUnverifiedProps> = ({
     focusInputById("expense-input");
   };
 
-  if (isPending) {
-    return (
-      <VStack
-        alignItems="flex-start"
-        justifyContent="center"
-        py="12px"
-        px="12px"
-        minW="400px"
-        {...rest}
-      >
-        <Heading as="h2" size="md" py={2}>
-          Pending auto expenses
-        </Heading>
-        {[...Array(4)].map((_, index) => (
-          <UnverifiedItemSkeleton key={index} />
-        ))}
-      </VStack>
-    );
-  }
-
   if (isError) return <div>{JSON.stringify(error, null, 2)}</div>;
 
   return (
     <VStack
       alignItems="flex-start"
       justifyContent="center"
-      py="12px"
-      px="12px"
       minW="400px"
+      w="full"
       {...rest}
     >
-      <Flex alignItems="center" gap="12">
-        <Heading as="h2" size="md" py={2}>
-          Pending auto expenses
-        </Heading>
-        <Button
-          colorScheme="blue"
-          size="sm"
-          isLoading={isBulkLoading}
-          onClick={handleAddAll}
-        >
-          Add all
-        </Button>
-      </Flex>
-      {unverified.length === 0 && (
-        <Text fontSize={14} color="gray.400">
-          No unverified expenses
-        </Text>
-      )}
-
-      {unverified.map((item: RowData) => (
-        <UnverifiedItem key={item.id} item={item} onClick={handleOnClick} />
-      ))}
+      <TrackSection
+        title={
+          <Flex alignItems="center" justifyContent="space-between" w="100%">
+            <Heading as="h2" size="md" py={2}>
+              Pending auto expenses
+            </Heading>
+            <Button
+              color="green.300"
+              size="sm"
+              isLoading={isBulkLoading}
+              onClick={handleAddAll}
+            >
+              Add all
+            </Button>
+          </Flex>
+        }
+      >
+        {isPending ? (
+          <Flex direction="column" gap={2} w="100%">
+            {[...Array(4)].map((_, index) => (
+              <UnverifiedItemSkeleton key={index} />
+            ))}
+          </Flex>
+        ) : (
+          <Flex direction="column" gap={3} w="100%">
+            {unverified.map((item: RowData) => (
+              <UnverifiedItem
+                key={item.id}
+                item={item}
+                onClick={handleOnClick}
+              />
+            ))}
+          </Flex>
+        )}
+        {!isLoading && unverified?.length === 0 && (
+          <Text fontSize={14} color="gray.400">
+            No unverified expenses
+          </Text>
+        )}
+      </TrackSection>
     </VStack>
   );
 };
