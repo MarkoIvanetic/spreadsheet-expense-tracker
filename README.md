@@ -2,7 +2,8 @@
 
 Use a Google Sheet as a lightweight database to track daily expenses with category detection, budgeting stats, and a minimal glassmorphic UI. Ideal for personal finance when a full backend feels like overkill.
 
-![App UI screenshot](https://github.com/user-attachments/assets/9fae94fc-abf3-4f67-a2eb-9a84345fcc96)
+<img width="497" height="811" alt="Screenshot 2025-11-04 at 21 12 41" src="https://github.com/user-attachments/assets/965447bd-9552-4d1d-92e0-aaef9084d0ac" />
+
 
 ## Table of Contents
 
