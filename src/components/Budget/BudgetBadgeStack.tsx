@@ -47,7 +47,12 @@ const BudgetBadge: FC<BudgetBadgeProps> = ({
           <Text fontWeight="bold" fontSize="md">
             {label}
           </Text>
-          <Skeleton borderRadius="md" mt={1} height="18px" width="120px" />
+          <Skeleton
+            borderRadius="md"
+            mt={1}
+            height="18px"
+            width="min(100%, 120px)"
+          />
         </VStack>
       </HStack>
     );
@@ -104,7 +109,11 @@ export const BudgetBadgeStack = () => {
             <Text fontSize="md">Total expenses</Text>
 
             {isLoading ? (
-              <Skeleton borderRadius="md" height="30px" width="92px" />
+              <Skeleton
+                borderRadius="md"
+                height="30px"
+                width="min(100%, 92px)"
+              />
             ) : (
               <Text fontWeight="bold" color="white" fontSize="xl">
                 €{data?.totalExpenses.toFixed(2)}

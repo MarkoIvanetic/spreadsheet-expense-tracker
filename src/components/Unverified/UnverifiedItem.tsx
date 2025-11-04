@@ -59,7 +59,7 @@ export const UnverifiedItemSkeleton: FC = () => {
         border: "none",
       }}
     >
-      <Skeleton height="42px" borderRadius="12px" />
+      <Skeleton height="42px" w="full" borderRadius="12px" />
     </Box>
   );
 };

@@ -28,7 +28,7 @@ export const Layout = () => {
       w="100%"
       maxW="800px"
       mx="auto"
-      px={8}
+      px={{ base: 2, md: 6, lg: 8 }}
       py={6}
       alignItems="flex-start"
       justifyContent="center"
@@ -43,7 +43,7 @@ export const Layout = () => {
       />
 
       <BudgetBadgeStack />
-      <Divider py={2} />
+      <Divider py={1} />
       <TrackerHeader
         selectedCategory={selectedCategory}
         onSave={saveExpense}
@@ -53,7 +53,7 @@ export const Layout = () => {
       />
 
       <Tracker key={reset} isLoading={isLoading} onSave={saveExpense} />
-      <Divider py={2} />
+      <Divider py={1} />
       <Unverified isLoading={isLoading} onSave={saveExpense} />
     </VStack>
   );

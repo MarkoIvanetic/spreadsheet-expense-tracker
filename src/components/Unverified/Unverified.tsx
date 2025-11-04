@@ -137,13 +137,7 @@ export const Unverified: FC<IUnverifiedProps> = ({
   if (isError) return <div>{JSON.stringify(error, null, 2)}</div>;
 
   return (
-    <VStack
-      alignItems="flex-start"
-      justifyContent="center"
-      minW="400px"
-      w="full"
-      {...rest}
-    >
+    <VStack alignItems="flex-start" justifyContent="center" w="full" {...rest}>
       <TrackSection
         title={
           <Flex alignItems="center" justifyContent="space-between" w="100%">
