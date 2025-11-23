@@ -48,11 +48,10 @@ export const Layout = () => {
         selectedCategory={selectedCategory}
         onSave={saveExpense}
         isLoading={isLoading}
-        key={reset}
         ref={inputRef}
       />
 
-      <Tracker key={reset} isLoading={isLoading} onSave={saveExpense} />
+      <Tracker isLoading={isLoading} onSave={saveExpense} />
       <Divider py={1} />
       <Unverified isLoading={isLoading} onSave={saveExpense} />
     </VStack>

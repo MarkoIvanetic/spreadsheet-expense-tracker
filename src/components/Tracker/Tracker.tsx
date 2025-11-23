@@ -1,4 +1,4 @@
-import { Box, Flex, SimpleGrid, StackProps, VStack } from "@chakra-ui/react";
+import { Box, Flex, StackProps } from "@chakra-ui/react";
 
 import { useTrackerContext } from "@/TrackerContext";
 import { TrackerCategoryItem } from "@/components/Tracker/TrackerCategoryItem";
@@ -7,7 +7,6 @@ import { useLocalStorage } from "@/hooks/useLocalStorage";
 import { useStats } from "@/hooks/useStats";
 import { Category } from "@/types";
 import { FC, useRef } from "react";
-import { TrackerHeader } from "./TrackerHeader";
 import { TrackerViewState } from "./TrackerMenu";
 
 interface ITrackerProps extends StackProps {
