@@ -36,6 +36,8 @@ export const matchingData: Array<MatchingData> = [
       "Burger",
       "McDonald",
       "Wolt",
+      "Magazinska",
+      "Caffe", // lateral
       "Trattoria",
       "Peko",
       "Tao",
@@ -83,7 +85,14 @@ export const matchingData: Array<MatchingData> = [
     category: categoriesLocal.car_gas,
   },
   {
-    includes: ["GoogleEUR", "PevexEUR", "Bauhaus", "EmmezetaEUR", "A1"],
+    includes: [
+      "GoogleEUR",
+      "PevexEUR",
+      "BonamiEUR",
+      "Bauhaus",
+      "EmmezetaEUR",
+      "A1",
+    ],
     category: categoriesLocal.mortgage_bills,
   },
   {
