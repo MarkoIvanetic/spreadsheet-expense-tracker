@@ -58,6 +58,9 @@ export const matchingData: Array<MatchingData> = [
       "Tvornica",
       "SamopostrezbaEUR",
       "Supernova",
+      "Peradarstvo", // pilici
+      "Martinjak", // mesar
+      "Bread", // club
       "PlodineEUR",
       "Ela",
       "PEKIN", // moved here
