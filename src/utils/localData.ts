@@ -33,6 +33,7 @@ export const matchingData: Array<MatchingData> = [
       "Mlinar",
       "Pekara",
       "Pekarna",
+      "Domino",
       "Burger",
       "McDonald",
       "Wolt",
@@ -41,11 +42,22 @@ export const matchingData: Array<MatchingData> = [
       "Trattoria",
       "Peko",
       "Tao",
+      "Frenky",
+      "KajzericaEUR",
     ],
     category: categoriesLocal.food,
   },
   {
-    includes: ["Tedi", "TediEUR", "TemuEUR", "MenartEUR", "Bambu"],
+    includes: [
+      "Tedi",
+      "TediEUR",
+      "TemuEUR",
+      "MenartEUR",
+      "Bambu",
+      "SteamEUR",
+      "VERBUMEUR",
+      "AliExpressEUR",
+    ],
     category: categoriesLocal.hobby,
   },
   {
@@ -64,11 +76,13 @@ export const matchingData: Array<MatchingData> = [
       "PlodineEUR",
       "Ela",
       "PEKIN", // moved here
+      "Mesnica",
+      "IGOMATEUR",
     ],
     category: categoriesLocal.groceries,
   },
   {
-    includes: ["House", "About You", "Peek", "HouseEUR"],
+    includes: ["House", "About You", "Peek", "HouseEUR", "LC", "PEPCOEUR"],
     category: categoriesLocal.clothing,
   },
   {
@@ -84,7 +98,15 @@ export const matchingData: Array<MatchingData> = [
     category: categoriesLocal.tobacco,
   },
   {
-    includes: ["PetrolEUR", "INAEUR", "Tifon", "LUKOILEUR", "BoltEUR"],
+    includes: [
+      "PetrolEUR",
+      "INAEUR",
+      "Tifon",
+      "LUKOILEUR",
+      "BoltEUR",
+      "ZagrebParkingEUR",
+      "nextbikeEUR",
+    ],
     category: categoriesLocal.car_gas,
   },
   {
