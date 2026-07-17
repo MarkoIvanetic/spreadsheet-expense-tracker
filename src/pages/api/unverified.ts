@@ -68,16 +68,19 @@ async function handlePostRequest(context: RequestContext) {
       );
   }
 
-  const formattedDate = new Intl.DateTimeFormat("en-US", {
-    timeZone: "Europe/Belgrade",
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
-  }).format(new Date(date));
+  let constructedValues = values;
 
-  const constructedValues = values || [
-    [category, value, description, formattedDate],
-  ];
+  // singular path: date is only present (and required) when values are absent
+  if (!constructedValues) {
+    const formattedDate = new Intl.DateTimeFormat("en-US", {
+      timeZone: "Europe/Belgrade",
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+    }).format(new Date(date));
+
+    constructedValues = [[category, value, description, formattedDate]];
+  }
 
   try {
     await updateSheet(

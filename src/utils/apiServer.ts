@@ -270,7 +270,9 @@ export async function updateSheet(
   );
   console.log("📈 First Empty Row Index:", firstEmptyRowIndex);
 
-  const sheetRange = `${lastSheetName}!A${firstEmptyRowIndex}:D${firstEmptyRowIndex}`;
+  // range must span as many rows as we are writing (values can be bulk)
+  const endRowIndex = firstEmptyRowIndex + values.length - 1;
+  const sheetRange = `${lastSheetName}!A${firstEmptyRowIndex}:D${endRowIndex}`;
   console.log("📌 Sheet Range:", sheetRange);
 
   const { data } = await sheets.spreadsheets.values.update({

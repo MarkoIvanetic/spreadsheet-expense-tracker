@@ -14,6 +14,7 @@
     "@chakra-ui/react": "^2.10.9",
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.1",
+    "@google/genai": "^2.12.0",
     "@tanstack/react-query": "^5.90.6",
     "google-auth-library": "^9.15.1",
     "googleapis": "^124.0.0",
@@ -21,7 +22,8 @@
     "next-pwa": "^5.6.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "swr": "^2.3.6"
+    "swr": "^2.3.6",
+    "unpdf": "^1.6.2"
   },
   "devDependencies": {
     "@netlify/plugin-nextjs": "^5.14.5",

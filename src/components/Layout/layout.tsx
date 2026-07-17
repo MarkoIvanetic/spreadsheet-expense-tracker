@@ -4,6 +4,7 @@ import { useSaveExpense } from "@/hooks/useSaveExpense";
 
 import { Tracker } from "@/components/Tracker/Tracker";
 import { Unverified } from "@/components/Unverified/Unverified";
+import { AiImport } from "@/components/Import/AiImport";
 import { BudgetBadgeStack } from "@/components/Budget/BudgetBadgeStack";
 import { TrackSection } from "@/components/shared/TrackSection";
 import TrackerTitle from "@/components/Tracker/TrackerTitle";
@@ -52,8 +53,10 @@ export const Layout = () => {
       />
 
       <Tracker isLoading={isLoading} onSave={saveExpense} />
+      <AiImport />
       <Divider py={1} />
       <Unverified isLoading={isLoading} onSave={saveExpense} />
+      <Divider py={1} />
     </VStack>
   );
 };
