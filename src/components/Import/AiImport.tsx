@@ -50,6 +50,10 @@ export const AiImport = () => {
   const [files, setFiles] = useState<File[]>([]);
   const [isRunning, setIsRunning] = useState(false);
   const [steps, setSteps] = useState<Step[] | null>(null);
+  const [importError, setImportError] = useState<{
+    message: string;
+    detail?: string;
+  } | null>(null);
 
   const setStep = (key: string, status: StepStatus, detail?: string) => {
     setSteps((prev) =>
@@ -64,12 +68,14 @@ export const AiImport = () => {
   const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
     setFiles(Array.from(event.target.files ?? []));
     setSteps(null);
+    setImportError(null);
   };
 
   const handleSubmit = async () => {
     if (files.length === 0 || isRunning) return;
 
     setIsRunning(true);
+    setImportError(null);
     setSteps(INITIAL_STEPS.map((step) => ({ ...step, detail: undefined })));
 
     let failedStep = "prepare";
@@ -132,6 +138,15 @@ export const AiImport = () => {
       if (fileInputRef.current) fileInputRef.current.value = "";
     } catch (error: any) {
       setStep(failedStep, "error", error?.message);
+      setImportError({
+        message: error?.message || "Import failed",
+        detail:
+          typeof error?.error === "string"
+            ? error.error
+            : error?.error
+            ? JSON.stringify(error.error)
+            : undefined,
+      });
       toast({
         title: error?.message || "Import failed",
         description: error?.error || "Check the console for details.",
@@ -215,6 +230,36 @@ export const AiImport = () => {
                 {step.status === "active" && <Spinner size="xs" />}
               </Flex>
             ))}
+          </VStack>
+        )}
+
+        {importError && (
+          <VStack
+            alignItems="stretch"
+            spacing={1}
+            p={3}
+            borderRadius="12px"
+            bg="rgba(229,62,62,0.08)"
+            borderWidth="1px"
+            borderColor="red.400"
+          >
+            <Text fontSize={14} fontWeight="bold" color="red.300">
+              AI submission error
+            </Text>
+            <Text fontSize={14} color="red.200">
+              {importError.message}
+            </Text>
+            {importError.detail && (
+              <Text
+                fontSize={12}
+                color="red.200"
+                fontFamily="mono"
+                whiteSpace="pre-wrap"
+                wordBreak="break-word"
+              >
+                {importError.detail}
+              </Text>
+            )}
           </VStack>
         )}
 
