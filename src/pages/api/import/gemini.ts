@@ -21,8 +21,10 @@ export const config = {
 
 const MIN_TEXT_LENGTH = 100; // below this the PDF is likely scanned → send bytes
 
-// Gemini extraction can be slow for large/scanned statements — give it room.
-const GEMINI_TIMEOUT_MS = 30_000;
+// Gemini extraction can be slow for large/scanned statements — give it room,
+// but stay under `maxDuration` so the client timeout fires before the platform
+// kills the whole function.
+const GEMINI_TIMEOUT_MS = 55_000;
 
 // --- extraction cache: same files + month + model within 10 minutes is
 // served from memory instead of re-billing Gemini (e.g. retry after a
@@ -38,7 +40,7 @@ const extractionCache = new Map<
 const cacheKeyFor = (
   files: ImportFilePayload[],
   statementMonth: string,
-  model: string
+  model: string,
 ): string => {
   const hash = createHash("sha256");
   hash.update(statementMonth).update(model);
@@ -121,13 +123,27 @@ type GeminiPart =
   | { text: string }
   | { inlineData: { mimeType: string; data: string } };
 
+// A 504 DEADLINE_EXCEEDED from Gemini is transient — the model was still
+// generating when Google cut the connection. Retry a couple of times with
+// backoff before giving up.
+const isRetryableGeminiError = (error: any): boolean => {
+  const msg = String(error?.message ?? "");
+  return (
+    error?.status === 504 ||
+    error?.code === 504 ||
+    /DEADLINE_EXCEEDED|deadline expired|UNAVAILABLE|503/i.test(msg)
+  );
+};
+
+const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
+
 /**
  * Stage 1 — deterministic, no AI, no tokens: turn each uploaded file into the
  * smallest possible prompt part (slimmed table text; raw bytes only as a
  * fallback for scanned PDFs).
  */
 const fileToPart = async (
-  file: ImportFilePayload
+  file: ImportFilePayload,
 ): Promise<{ part: GeminiPart; note: string }> => {
   // CSV / plain text: never send as a document
   if (file.mimeType.startsWith("text/") || /\.csv$/i.test(file.name)) {
@@ -141,7 +157,7 @@ const fileToPart = async (
   if (file.mimeType === "application/pdf") {
     const { extractText, getDocumentProxy } = await import("unpdf");
     const pdf = await getDocumentProxy(
-      new Uint8Array(Buffer.from(file.base64, "base64"))
+      new Uint8Array(Buffer.from(file.base64, "base64")),
     );
     const { text } = await extractText(pdf, { mergePages: true });
 
@@ -178,7 +194,7 @@ const sanitizeEntries = (entries: GeminiImportEntry[]): GeminiImportEntry[] =>
         Number.isFinite(e.value) &&
         e.value > 0 &&
         typeof e.description === "string" &&
-        e.description.trim().length > 0
+        e.description.trim().length > 0,
     )
     .map((e) => {
       const validCategory = e.category in categoriesLocal;
@@ -192,13 +208,13 @@ const sanitizeEntries = (entries: GeminiImportEntry[]): GeminiImportEntry[] =>
         needsReview: e.needsReview || flagged,
         reviewReason: flagged
           ? e.reviewReason || "Invalid category or date from model"
-          : e.reviewReason ?? null,
+          : (e.reviewReason ?? null),
       };
     });
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse
+  res: NextApiResponse,
 ) {
   if (req.method !== "POST") {
     return res
@@ -245,10 +261,13 @@ export default async function handler(
     // Stage 1: deterministic strip (cheap, no tokens)
     const prepared = await Promise.all(files.map(fileToPart));
 
-    // Stage 2: Gemini classifies + normalizes the slimmed rows
+    // Stage 2: Gemini classifies + normalizes the slimmed rows.
+    // Stream the response: the non-streaming endpoint has a fixed server-side
+    // deadline that large/scanned statements blow past (504 DEADLINE_EXCEEDED),
+    // whereas streaming keeps the connection alive as tokens are produced.
     const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 
-    const response = await ai.models.generateContent({
+    const request = {
       model,
       contents: [
         {
@@ -265,9 +284,29 @@ export default async function handler(
         temperature: 0, // deterministic extraction
         httpOptions: { timeout: GEMINI_TIMEOUT_MS },
       },
-    });
+    };
 
-    const raw = JSON.parse(response.text ?? "{}") as GeminiImportResult;
+    const MAX_ATTEMPTS = 3;
+    let text = "";
+    for (let attempt = 1; ; attempt++) {
+      try {
+        const stream = await ai.models.generateContentStream(request);
+        let acc = "";
+        for await (const chunk of stream) {
+          acc += chunk.text ?? "";
+        }
+        text = acc;
+        break;
+      } catch (error: any) {
+        if (attempt >= MAX_ATTEMPTS || !isRetryableGeminiError(error)) throw error;
+        console.warn(
+          `Gemini attempt ${attempt} failed (${error?.message}), retrying...`,
+        );
+        await sleep(1000 * attempt); // linear backoff: 1s, 2s
+      }
+    }
+
+    const raw = JSON.parse(text || "{}") as GeminiImportResult;
     const entries = sanitizeEntries(raw.entries ?? []);
 
     const result: GeminiImportResult = {
