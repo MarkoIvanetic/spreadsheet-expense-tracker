@@ -14,9 +14,15 @@ import { categoriesLocal } from "@/utils/localData";
 // base64 payloads are ~33% larger than the files themselves
 export const config = {
   api: { bodyParser: { sizeLimit: "15mb" } },
+  // must exceed GEMINI_TIMEOUT_MS below, or the platform kills the
+  // function before the model has a chance to time out on its own
+  maxDuration: 60,
 };
 
 const MIN_TEXT_LENGTH = 100; // below this the PDF is likely scanned → send bytes
+
+// Gemini extraction can be slow for large/scanned statements — give it room.
+const GEMINI_TIMEOUT_MS = 30_000;
 
 // --- extraction cache: same files + month + model within 10 minutes is
 // served from memory instead of re-billing Gemini (e.g. retry after a
@@ -257,6 +263,7 @@ export default async function handler(
         responseMimeType: "application/json",
         responseSchema,
         temperature: 0, // deterministic extraction
+        httpOptions: { timeout: GEMINI_TIMEOUT_MS },
       },
     });
 
